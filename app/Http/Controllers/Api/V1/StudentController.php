@@ -4,21 +4,30 @@ namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Person;
-use App\Student;
+use App\Models\Person;
+use App\Models\Student;
+use App\Transformers\StudentTransformer;
 
+/**
+* @Resource("Students")
+*/
 class StudentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Show all students
      *
-     * @return \Illuminate\Http\Response
+     * Get a JSON representation of all the registered students.
+     *
+     * @Get("/")
+     * @Versions({"v1"})
      */
     public function index()
     {
-      $students = Student::all();
-
-      return $students;
+      return $this->response->collection(
+        Student::all(),
+        new StudentTransformer,
+        ['key' => 'students']
+      );
     }
 
     /**
@@ -62,14 +71,21 @@ class StudentController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Show student
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Get a JSON representation of the registered student.
+     *
+     * @Get("/{id}")
+     * @Versions({"v1"})
+     * @Parameters({
+     *  @Parameter("id", type="integer", required=true, description="Student id reference.")
+     * })
      */
     public function show($id)
     {
-        //
+      $student = Student::findOrFail($id);
+
+      return $student;
     }
 
     /**
