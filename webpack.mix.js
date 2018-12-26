@@ -18,6 +18,7 @@ mix.styles([
   'vendor/almasaeed2010/adminlte/bower_components/bootstrap/dist/css/bootstrap.min.css',
   'vendor/almasaeed2010/adminlte/bower_components/font-awesome/css/font-awesome.min.css',
   'vendor/almasaeed2010/adminlte/dist/css/AdminLTE.min.css',
+  'vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins.min.css',
 ], 'public/css/app.css');
 
 mix.scripts([
