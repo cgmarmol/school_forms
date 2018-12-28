@@ -17,6 +17,7 @@ let mix = require('laravel-mix');
 mix.styles([
   'vendor/almasaeed2010/adminlte/bower_components/bootstrap/dist/css/bootstrap.min.css',
   'vendor/almasaeed2010/adminlte/bower_components/font-awesome/css/font-awesome.min.css',
+  'vendor/almasaeed2010/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css',
   'vendor/almasaeed2010/adminlte/dist/css/AdminLTE.min.css',
   'vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins.min.css',
 ], 'public/css/app.css');
@@ -24,6 +25,8 @@ mix.styles([
 mix.scripts([
   'vendor/almasaeed2010/adminlte/bower_components/jquery/dist/jquery.min.js',
   'vendor/almasaeed2010/adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js',
+  'vendor/almasaeed2010/adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js',
+  'vendor/almasaeed2010/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js',
   'vendor/almasaeed2010/adminlte/dist/js/adminlte.min.js',
 ], 'public/js/app.js');
 

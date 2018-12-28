@@ -12,5 +12,14 @@
 */
 
 Route::get('/', function () {
-    return view('login');
+    return view('dashboard');
+});
+
+Route::get('/enroll', function () {
+    return view('enroll/index');
+});
+
+
+Route::get('/settings/subjects', function() {
+    return view('settings/subjects/index');
 });
