@@ -131,8 +131,8 @@
                     </a>
                   </li>
                   <li>
-                    <a href="{{ url('/') }}">
-                      <i class="fa fa-list"></i> <span>Curriculum</span>
+                    <a href="{{ url('settings/curricula') }}">
+                      <i class="fa fa-list"></i> <span>Curricula</span>
                     </a>
                   </li>
                   <li>

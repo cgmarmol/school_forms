@@ -27,5 +27,6 @@ $api->version('v1', function($api) {
 
   $api->resource('students', 'App\Http\Controllers\Api\V1\StudentController');
   $api->resource('subjects', 'App\Http\Controllers\Api\V1\SubjectController');
+  $api->resource('curricula', 'App\Http\Controllers\Api\V1\CurriculumController');
 
 });

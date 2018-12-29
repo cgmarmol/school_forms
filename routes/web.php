@@ -23,3 +23,10 @@ Route::get('/enroll', function () {
 Route::get('/settings/subjects', function() {
     return view('settings/subjects/index');
 });
+
+Route::get('/settings/curricula', function() {
+    $courses = App\Models\Course::all();
+    return view('settings/curricula/index', [
+      'courses' => $courses
+    ]);
+});
