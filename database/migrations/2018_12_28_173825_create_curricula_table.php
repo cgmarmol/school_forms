@@ -17,9 +17,8 @@ class CreateCurriculaTable extends Migration
             $table->increments('id');
             $table->string('course_code');
             $table->string('description');
-            $table->string('academic_year_effectivity');
+            $table->date('effectivity_date');
             $table->boolean('is_published')->default(false);
-            $table->boolean('is_active')->default(false);
             $table->timestamps();
 
             $table->foreign('course_code')

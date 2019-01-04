@@ -24,10 +24,24 @@ class StoreSubjectRequest extends FormRequest
      */
     public function rules()
     {
+        $curriculum_id = $this->route()->parameters('id');
+        $subject_code = $this->input('subject_code');
+
         return [
-          'code' => 'required|unique:subjects',
-          'title' => 'required',
-          'description' => 'nullable'
+          'default_semester' => 'nullable',
+          'subject_level' => 'required',
+          'subject_code' => [
+            'required',
+            function($attribute, $value, $fail) use ($curriculum_id, $subject_code) {
+              $test = \App\Models\Subject::where('curriculum_id', $curriculum_id)
+                ->where('code', $subject_code)->get()->count();
+              if($test) {
+                $fail('The ' . str_replace('_', ' ', $attribute) . ' has already been taken.');
+              }
+            }
+          ],
+          'subject_title' => 'required',
+          'subject_description' => 'nullable'
         ];
     }
 }

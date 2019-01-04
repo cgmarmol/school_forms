@@ -32,17 +32,6 @@ class SubjectController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreSubjectRequest $request)
-    {
-      return Subject::create($request->all());
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id

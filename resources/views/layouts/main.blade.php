@@ -35,7 +35,7 @@
                 <li class="dropdown user user-menu">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <img src="{{ asset('images/avatar.jpeg') }}" class="user-image" alt="User Image">
-                    <span class="hidden-xs">Alexander Pierce</span>
+                    <span class="hidden-xs">Christopher Marmol</span>
                   </a>
                   <ul class="dropdown-menu">
                     <!-- User image -->
@@ -43,7 +43,7 @@
                       <img src="{{ asset('images/avatar.jpeg') }}" class="img-circle" alt="User Image">
 
                       <p>
-                        Alexander Pierce - Web Developer
+                        Christopher Marmol - Teacher
                         <small>Member since Nov. 2012</small>
                       </p>
                     </li>
@@ -94,13 +94,13 @@
                 <img src="{{ asset('images/avatar.jpeg') }}" class="img-circle" alt="User Image">
               </div>
               <div class="pull-left info">
-                <p>Alexander Pierce</p>
+                <p>Christopher Marmol</p>
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
               </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu" data-widget="tree">
-              <li class="treeview active">
+              <li class="treeview {{ Request::is('/') ? 'active' : null }}">
                 <a href="#">
                   <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                   <span class="pull-right-container">
@@ -108,11 +108,11 @@
                   </span>
                 </a>
                 <ul class="treeview-menu">
-                  <li><a href="#"><i class="fa fa-user-plus"></i> Enroll Student</a></li>
-                  <li><a href="#"><i class="fa fa-list-alt"></i> Student Masterlist</a></li>
+                  <li><a href="{{ url('/') }}"><i class="fa fa-user-plus"></i> Enroll Student</a></li>
+                  <li><a href="{{ url('/') }}"><i class="fa fa-list-alt"></i> Student Masterlist</a></li>
                 </ul>
               </li>
-              <li class="treeview">
+              <li class="treeview {{ Request::is('settings/*') ? 'active' : null }}">
                 <a href="#">
                   <i class="fa fa-cogs"></i> <span>General Settings</span>
                   <span class="pull-right-container">
@@ -121,18 +121,13 @@
                 </a>
                 <ul class="treeview-menu">
                   <li>
-                    <a href="#">
-                      <i class="fa fa-calendar"></i> <span>Enrollment Registry</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="{{ url('settings/subjects') }}">
-                      <i class="fa fa-list-alt"></i> <span>Subjects</span>
-                    </a>
-                  </li>
-                  <li>
                     <a href="{{ url('settings/curricula') }}">
                       <i class="fa fa-list"></i> <span>Curricula</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{ url('settings/enrollment-schedules') }}">
+                      <i class="fa fa-calendar"></i> <span>Enrollment Schedules</span>
                     </a>
                   </li>
                   <li>

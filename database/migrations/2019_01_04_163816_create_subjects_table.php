@@ -15,10 +15,20 @@ class CreateSubjectsTable extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('code')->unique();
+            $table->integer('curriculum_id')->unsigned()->nullable();
+            $table->string('level');
+            $table->tinyInteger('default_semester')->nullable();
+            $table->string('code');
             $table->string('title');
             $table->string('description')->nullable();
             $table->timestamps();
+
+            $table->foreign('curriculum_id')
+              ->references('id')->on('curricula')
+              ->onDelete('cascade')
+              ->onUpdate('cascade');
+
+            $table->unique(['curriculum_id', 'code']);
         });
     }
 

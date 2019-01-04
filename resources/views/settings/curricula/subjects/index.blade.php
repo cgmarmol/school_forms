@@ -3,13 +3,14 @@
 @section('title', 'ASCT Settings > Subjects')
 
 @section('content-header')
-<h1><i class="fa fa-list"></i> Curricula</h1>
+<h1><i class="fa fa-list"></i> {{ $curriculum->description }} Subjects</h1>
 @endsection
 
 @section('breadcrumb')
 <ol class="breadcrumb">
   <li><a href="{{ url('/') }}"><i class="fa fa-cogs"></i> General Settings</a></li>
-  <li>Curricula</li>
+  <li><a href="{{ url('settings/curricula') }}">Curricula</a></li>
+  <li>Curriculum Subjects</li>
 </ol>
 @endsection
 
@@ -18,27 +19,27 @@
   <div class="col-md-8">
     <div class="box box-primary">
       <div class="box-header with-border">
-        <h3 class="box-title">Curricula Masterlist</h3>
+        <h3 class="box-title">Curriculum Subjects</h3>
       </div>
       <!-- /.box-header -->
       <!-- form start -->
       <form role="form">
         <div class="box-body">
-          <table id="example1" class="table table-bordered table-striped">
+          <table id="example1" class="table table-bordered table-striped" width="100%">
             <thead>
-              <th>ID</th>
-              <th>Course</th>
-              <th>Description</th>
-              <th>Effectivity Date</th>
-              <th>Published</th>
+              <th>Grade Level</th>
+              <th>Default Semester</th>
+              <th>Subject Code</th>
+              <th>Subject Title</th>
+              <th>Subject Description</th>
               <th>&nbsp;</th>
             </thead>
             <tfoot>
-              <th>ID</th>
-              <th>Course</th>
-              <th>Description</th>
-              <th>Effectivity Date</th>
-              <th>Published</th>
+              <th>Grade Level</th>
+              <th>Default Semester</th>
+              <th>Subject Code</th>
+              <th>Subject Title</th>
+              <th>Subject Description</th>
               <th>&nbsp;</th>
             </tfoot>
           </table>
@@ -46,7 +47,7 @@
         <!-- /.box-body -->
 
         <div class="box-footer">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
         </div>
       </form>
     </div>
@@ -54,7 +55,7 @@
   <div class="col-md-4">
     <div class="box box-primary">
       <div class="box-header with-border">
-        <h3 class="box-title">Add New Curriculum</h3>
+        <h3 class="box-title">Add Subject to Curriculum</h3>
       </div>
       <!-- /.box-header -->
       <!-- form start -->
@@ -62,22 +63,30 @@
         <div class="box-body">
           <div class="callout"></div>
           <div class="form-group">
-            <label for="code">Course</label>
-            <select class="form-control" id="course_code" name="course_code">
-              @foreach($courses as $course)
-              <option value="{{ $course->code }}">{{ $course->code }}</option>
-              @endforeach
+            <label for="code">Grade Level</label>
+            <select class="form-control" id="subject_level" name="subject_level">
+              <option>Grade 11</option>
+              <option>Grade 12</option>
             </select>
+          </div>
+          <div class="form-group">
+            <label for="code">Default Semester</label>
+            <input type="text" class="form-control" id="default_semester" name="default_semester" placeholder="Enter default semester">
+            <span class="help-block"></span>
+          </div>
+          <div class="form-group">
+            <label for="code">Code</label>
+            <input type="text" class="form-control" id="subject_code" name="subject_code" placeholder="Enter subject code">
+            <span class="help-block"></span>
+          </div>
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="subject_title" name="subject_title" placeholder="Enter subject title">
             <span class="help-block"></span>
           </div>
           <div class="form-group">
             <label for="description">Description</label>
-            <input type="text" class="form-control" id="description" name="description" placeholder="Enter curriculum description">
-            <span class="help-block"></span>
-          </div>
-          <div class="form-group">
-            <label for="effectivity_date">Effectivity Date</label>
-            <input type="text" class="form-control" id="effectivity_date" name="effectivity_date" placeholder="Enter curriculum effectivity date">
+            <input type="text" class="form-control" id="subject_description" name="subject_description" placeholder="Enter subject description">
             <span class="help-block"></span>
           </div>
         </div>
@@ -98,28 +107,21 @@
     var subjectsMasterList = $('#example1').DataTable({
       'ordering': false,
       'processing': true,
+      'responsive': true,
       'serverSide': true,
-      'ajax': '{{ url("api/curricula") }}',
+      'ajax': '{{ url("api/curricula/".$curriculum->id."/subjects") }}',
       'columns': [
-        { 'data': 'id' },
-        { 'data': 'course_code' },
+        { 'data': 'level' },
+        { 'data': 'default_semester' },
+        { 'data': 'code' },
+        { 'data': 'title' },
         { 'data': 'description' },
-        { 'data': 'effectivity_date' },
         {
           'data': null,
           'render': function(data, type, row) {
-            var published = data.is_published == 1 ? '<a href="#"><i class="fa fa-lg fa-check text-green"></i></a>' : '';
-            return published;
-          }
-        },
-        {
-          'data': null,
-          'render': function(data, type, row) {
-            var active = data.is_published == 1 ? ('<a href="#"><i class="fa fa-lg '+(data.is_active == 1 ? 'fa-toggle-on text-green' : 'fa-toggle-off text-red' )+'"></i></a>') : '';
-            var subjects = '<a href="{{ url("settings/curricula") }}/'+data.id+'/subjects"><i class="fa fa-lg fa-book"></i></a>';
-            var archive = '<a href="{{ url("settings/curricula") }}/'+data.id+'/subjects"><i class="fa fa-lg fa-archive"></i></a>';
-            var del = '<a href="{{ url("settings/curricula") }}/'+data.id+'/subjects"><i class="fa fa-lg fa-trash"></i></a>';
-            return active + " " + subjects + " " + archive + " " + del;
+            var deleteSubject = '<a href="#"><i class="fa fa-lg fa-trash"></i></a>';
+
+            return deleteSubject;
           }
         }
       ]
@@ -136,7 +138,7 @@
       var ref = this;
       var data = $(ref).serialize();
 
-      $.post('{{ url("api/curricula") }}', data, function(r) {
+      $.post('{{ url("api/curricula/".$curriculum->id."/subjects") }}', data, function(r) {
         $('.callout', ref).addClass('callout-success').show().fadeOut(3000).text('Successfully registered new curriculum.');
         ref.reset();
         subjectsMasterList.draw();

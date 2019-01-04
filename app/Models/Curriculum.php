@@ -11,6 +11,11 @@ class Curriculum extends Model
     protected $fillable = [
       'course_code',
       'description',
-      'academic_year_effectivity'
+      'effectivity_date'
     ];
+
+    public function subjects()
+    {
+      return $this->hasMany('App\Models\Subject');
+    }
 }

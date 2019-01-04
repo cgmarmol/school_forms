@@ -3,13 +3,13 @@
 @section('title', 'ASCT Settings > Subjects')
 
 @section('content-header')
-<h1><i class="fa fa-list"></i> Subjects</h1>
+<h1><i class="fa fa-calendar"></i> Enrollment Schedules</h1>
 @endsection
 
 @section('breadcrumb')
 <ol class="breadcrumb">
   <li><a href="{{ url('/') }}"><i class="fa fa-cogs"></i> General Settings</a></li>
-  <li>Subjects</li>
+  <li>Enrollment Schedules</li>
 </ol>
 @endsection
 
@@ -17,23 +17,25 @@
 <div class="row">
   <div class="col-md-8">
     <div class="box box-primary">
-      <div class="box-header with-border">
-        <h3 class="box-title">Subject Masterlist</h3>
-      </div>
-      <!-- /.box-header -->
       <!-- form start -->
       <form role="form">
         <div class="box-body">
           <table id="example1" class="table table-bordered table-striped">
             <thead>
-              <th>Code</th>
-              <th>Title</th>
+              <th>Course</th>
+              <th>A.Y.</th>
               <th>Description</th>
+              <th>Effectivity Date</th>
+              <th>Published</th>
+              <th>&nbsp;</th>
             </thead>
             <tfoot>
-              <th>Code</th>
-              <th>Title</th>
+              <th>ID</th>
+              <th>Course</th>
               <th>Description</th>
+              <th>Effectivity Date</th>
+              <th>Published</th>
+              <th>&nbsp;</th>
             </tfoot>
           </table>
         </div>
@@ -48,7 +50,7 @@
   <div class="col-md-4">
     <div class="box box-primary">
       <div class="box-header with-border">
-        <h3 class="box-title">Add New Subject</h3>
+        <h3 class="box-title">Add New Enrollment Schedule</h3>
       </div>
       <!-- /.box-header -->
       <!-- form start -->
@@ -56,18 +58,31 @@
         <div class="box-body">
           <div class="callout"></div>
           <div class="form-group">
-            <label for="code">Code</label>
-            <input type="text" class="form-control" id="code" name="code" placeholder="Enter subject code">
+            <label for="description">Academic Year</label>
+            <input type="text" class="form-control" id="description" name="description" placeholder="Enter curriculum description">
             <span class="help-block"></span>
           </div>
           <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" class="form-control" id="title" name="title" placeholder="Enter subject title">
+            <label for="description">Semester</label>
+            <input type="text" class="form-control" id="description" name="description" placeholder="Enter curriculum description">
             <span class="help-block"></span>
           </div>
           <div class="form-group">
-            <label for="description">Description</label>
-            <input type="text" class="form-control" id="description" name="description" placeholder="Enter subject description">
+            <label for="code">Course</label>
+            <select class="form-control" id="course_code" name="course_code">
+              @foreach($courses as $course)
+              <option value="{{ $course->code }}">{{ $course->code }}</option>
+              @endforeach
+            </select>
+            <span class="help-block"></span>
+          </div>
+          <div class="form-group">
+            <label for="code">Curriculum</label>
+            <select class="form-control" id="course_code" name="course_code">
+              @foreach($curricula as $curriculum)
+              <option value="{{ $curriculum->id }}">{{ $curriculum->description }}</option>
+              @endforeach
+            </select>
             <span class="help-block"></span>
           </div>
         </div>
@@ -86,13 +101,32 @@
 <script type="text/javascript">
   $(function() {
     var subjectsMasterList = $('#example1').DataTable({
+      'ordering': false,
       'processing': true,
       'serverSide': true,
-      'ajax': '{{ url("api/subjects") }}',
+      'ajax': '{{ url("api/curricula") }}',
       'columns': [
-        { 'data': 'code' },
-        { 'data': 'title' },
-        { 'data': 'description' }
+        { 'data': 'id' },
+        { 'data': 'course_code' },
+        { 'data': 'description' },
+        { 'data': 'effectivity_date' },
+        {
+          'data': null,
+          'render': function(data, type, row) {
+            var published = data.is_published == 1 ? '<a href="#"><i class="fa fa-lg fa-check text-green"></i></a>' : '';
+            return published;
+          }
+        },
+        {
+          'data': null,
+          'render': function(data, type, row) {
+            var active = data.is_published == 1 ? ('<a href="#"><i class="fa fa-lg '+(data.is_active == 1 ? 'fa-toggle-on text-green' : 'fa-toggle-off text-red' )+'"></i></a>') : '';
+            var subjects = '<a href="{{ url("settings/curricula") }}/'+data.id+'/subjects"><i class="fa fa-lg fa-book"></i></a>';
+            var archive = '<a href="{{ url("settings/curricula") }}/'+data.id+'/subjects"><i class="fa fa-lg fa-archive"></i></a>';
+            var del = '<a href="{{ url("settings/curricula") }}/'+data.id+'/subjects"><i class="fa fa-lg fa-trash"></i></a>';
+            return active + " " + subjects + " " + archive + " " + del;
+          }
+        }
       ]
     });
 
@@ -107,8 +141,8 @@
       var ref = this;
       var data = $(ref).serialize();
 
-      $.post('{{ url("api/subjects") }}', data, function(r) {
-        $('.callout', ref).addClass('callout-success').show().fadeOut(3000).text('Successfully registered new subject.');
+      $.post('{{ url("api/curricula") }}', data, function(r) {
+        $('.callout', ref).addClass('callout-success').show().fadeOut(3000).text('Successfully registered new curriculum.');
         ref.reset();
         subjectsMasterList.draw();
       }).fail(function(r) {

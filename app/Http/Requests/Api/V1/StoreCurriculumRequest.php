@@ -27,7 +27,7 @@ class StoreCurriculumRequest extends FormRequest
         return [
           'course_code' => 'required',
           'description' => 'required',
-          'academic_year_effectivity' => 'required'
+          'effectivity_date' => 'required'
         ];
     }
 }

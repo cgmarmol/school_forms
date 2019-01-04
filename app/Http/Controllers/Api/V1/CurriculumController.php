@@ -20,14 +20,22 @@ class CurriculumController extends Controller
      */
     public function index(Request $request)
     {
+      $curricula = Curriculum::orderBy('course_code', 'asc')
+        ->offset($request->input('start'))
+        ->limit($request->input('length'))
+        ->get();
+
+      // subjects link
+      // foreach($curricula as &$curriculum) {
+      //   $curriculum->action_links = '<a href="'.url("curricula/{$curriculum->id}/subjects").'"><i class="fa fa-book"></i></a>';
+      //   unset($curriculum);
+      // }
+
       return [
         'draw' => $request->input('draw'),
         'recordsTotal' => Curriculum::all()->count(),
         'recordsFiltered' => Curriculum::all()->count(),
-        'data' => Curriculum::orderBy('course_code', 'asc')
-          ->offset($request->input('start'))
-          ->limit($request->input('length'))
-          ->get()
+        'data' => $curricula
       ];
     }
 
