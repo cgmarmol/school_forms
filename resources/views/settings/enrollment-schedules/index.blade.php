@@ -20,21 +20,17 @@
       <!-- form start -->
       <form role="form">
         <div class="box-body">
-          <table id="example1" class="table table-bordered table-striped">
+          <table id="example1" class="table table-bordered table-striped" width="100%">
             <thead>
-              <th>Course</th>
-              <th>A.Y.</th>
-              <th>Description</th>
-              <th>Effectivity Date</th>
-              <th>Published</th>
+              <th>Academic Year</th>
+              <th>Semester</th>
+              <th>&nbsp;</th>
               <th>&nbsp;</th>
             </thead>
             <tfoot>
-              <th>ID</th>
-              <th>Course</th>
-              <th>Description</th>
-              <th>Effectivity Date</th>
-              <th>Published</th>
+              <th>Academic Year</th>
+              <th>Semester</th>
+              <th>&nbsp;</th>
               <th>&nbsp;</th>
             </tfoot>
           </table>
@@ -42,7 +38,7 @@
         <!-- /.box-body -->
 
         <div class="box-footer">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
         </div>
       </form>
     </div>
@@ -59,30 +55,12 @@
           <div class="callout"></div>
           <div class="form-group">
             <label for="description">Academic Year</label>
-            <input type="text" class="form-control" id="description" name="description" placeholder="Enter curriculum description">
+            <input type="text" class="form-control" id="academic_year" name="academic_year" placeholder="Enter curriculum description">
             <span class="help-block"></span>
           </div>
           <div class="form-group">
             <label for="description">Semester</label>
-            <input type="text" class="form-control" id="description" name="description" placeholder="Enter curriculum description">
-            <span class="help-block"></span>
-          </div>
-          <div class="form-group">
-            <label for="code">Course</label>
-            <select class="form-control" id="course_code" name="course_code">
-              @foreach($courses as $course)
-              <option value="{{ $course->code }}">{{ $course->code }}</option>
-              @endforeach
-            </select>
-            <span class="help-block"></span>
-          </div>
-          <div class="form-group">
-            <label for="code">Curriculum</label>
-            <select class="form-control" id="course_code" name="course_code">
-              @foreach($curricula as $curriculum)
-              <option value="{{ $curriculum->id }}">{{ $curriculum->description }}</option>
-              @endforeach
-            </select>
+            <input type="text" class="form-control" id="semester" name="semester" placeholder="Enter curriculum description">
             <span class="help-block"></span>
           </div>
         </div>
@@ -103,28 +81,38 @@
     var subjectsMasterList = $('#example1').DataTable({
       'ordering': false,
       'processing': true,
+      'responsive': true,
       'serverSide': true,
-      'ajax': '{{ url("api/curricula") }}',
+      'ajax': '{{ url("api/enrollment-schedules") }}',
       'columns': [
-        { 'data': 'id' },
-        { 'data': 'course_code' },
-        { 'data': 'description' },
-        { 'data': 'effectivity_date' },
+        { 'data': 'academic_year' },
+        { 'data': 'semester' },
         {
           'data': null,
           'render': function(data, type, row) {
-            var published = data.is_published == 1 ? '<a href="#"><i class="fa fa-lg fa-check text-green"></i></a>' : '';
-            return published;
+            var open = '<div class="form-group">'+
+              '<div class="radio">'+
+                '<label>'+
+                  '<input type="radio" name="' + data.academic_year + "_" + data.semester + '_is_open" value="1" class="enrollment-schedule-is-open" ' + (data.is_open == 1 ? 'checked' : '') + '>'+
+                  '&nbsp;Open' +
+                '</label>'+
+              '</div>&nbsp;&nbsp;'+
+              '<div class="radio">'+
+                '<label>'+
+                  '<input type="radio" name="' + data.academic_year + "_" + data.semester + '_is_open" value="0" class="enrollment-schedule-is-open" ' + (data.is_open == 0 ? 'checked' : '') + '>'+
+                  '&nbsp;Closed' +
+                '</label>'+
+              '</div>'+
+            '</div>';
+
+            return open;
           }
         },
         {
           'data': null,
           'render': function(data, type, row) {
-            var active = data.is_published == 1 ? ('<a href="#"><i class="fa fa-lg '+(data.is_active == 1 ? 'fa-toggle-on text-green' : 'fa-toggle-off text-red' )+'"></i></a>') : '';
-            var subjects = '<a href="{{ url("settings/curricula") }}/'+data.id+'/subjects"><i class="fa fa-lg fa-book"></i></a>';
-            var archive = '<a href="{{ url("settings/curricula") }}/'+data.id+'/subjects"><i class="fa fa-lg fa-archive"></i></a>';
-            var del = '<a href="{{ url("settings/curricula") }}/'+data.id+'/subjects"><i class="fa fa-lg fa-trash"></i></a>';
-            return active + " " + subjects + " " + archive + " " + del;
+            var open = '<a href="#" title="Sections / Subject Offerings"><i class="fa fa-lg fa-list-alt"></i></a>';
+            return open;
           }
         }
       ]
@@ -135,13 +123,23 @@
       $(this).closest('.form-group').removeClass('has-error');
       $(this).closest('.form-group').find('.help-block').html('');
     });
+    $('body').on('change', '.enrollment-schedule-is-open', function() {
+      var isOpen = $(this).val();
+      $.ajax({
+        type: 'PATCH',
+        url: '{{ url("api/enrollment-schedules/2020-2021_2") }}',
+        success: function(r) {
+          
+        }
+      });
+    });
 
     $('#newSubjectForm').submit(function(e) {
       e.preventDefault();
       var ref = this;
       var data = $(ref).serialize();
 
-      $.post('{{ url("api/curricula") }}', data, function(r) {
+      $.post('{{ url("api/enrollment-schedules") }}', data, function(r) {
         $('.callout', ref).addClass('callout-success').show().fadeOut(3000).text('Successfully registered new curriculum.');
         ref.reset();
         subjectsMasterList.draw();

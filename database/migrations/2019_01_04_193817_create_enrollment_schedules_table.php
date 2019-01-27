@@ -16,22 +16,11 @@ class CreateEnrollmentSchedulesTable extends Migration
         Schema::create('enrollment_schedules', function (Blueprint $table) {
             $table->string('academic_year');
             $table->tinyInteger('semester');
-            $table->string('course_code');
-            $table->integer('curriculum_id')->unsigned()->nullable();
-
-            $table->foreign('course_code')
-              ->references('code')->on('courses')
-              ->onDelete('cascade')
-              ->onUpdate('cascade');
-
-            $table->foreign('curriculum_id')
-              ->references('id')->on('curricula')
-              ->onDelete('cascade')
-              ->onUpdate('cascade');
-
-            $table->primary(['academic_year', 'semester', 'course_code', 'curriculum_id'], 'enrollment_schedule_primary');
-
+            $table->boolean('is_open')->default(false);
+            
             $table->timestamps();
+
+            $table->primary(['academic_year', 'semester']);
         });
     }
 

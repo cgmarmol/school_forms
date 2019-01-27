@@ -31,4 +31,6 @@ $api->version('v1', function($api) {
 
   $api->resource('curricula/{id}/subjects', 'App\Http\Controllers\Api\V1\CurriculumSubjectController');
 
+  $api->resource('enrollment-schedules', 'App\Http\Controllers\Api\V1\EnrollmentScheduleController');
+
 });
