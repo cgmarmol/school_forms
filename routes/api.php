@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 
 $api = app('Dingo\Api\Routing\Router');
 
-$api->version('v1', function($api) {
+$api->version('v1', ['middleware' => 'bindings'], function($api) {
 
   $api->get('/', function() {
     return 'School Forms API';
@@ -32,5 +32,8 @@ $api->version('v1', function($api) {
   $api->resource('curricula/{id}/subjects', 'App\Http\Controllers\Api\V1\CurriculumSubjectController');
 
   $api->resource('enrollment-schedules', 'App\Http\Controllers\Api\V1\EnrollmentScheduleController');
+
+  $api->resource('sections', 'App\Http\Controllers\Api\V1\SectionController');
+  $api->resource('sections.students', 'App\Http\Controllers\Api\V1\SectionStudentController');
 
 });
