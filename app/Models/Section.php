@@ -18,6 +18,7 @@ class Section extends Model
     public function students()
     {
         return $this->belongsToMany('App\Models\Student', 'section_students', 'section_id', 'student_id')
+          ->withPivot(['grade'])
           ->withTimestamps();
     }
 }

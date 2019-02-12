@@ -43,8 +43,10 @@ class SectionStudentController extends Controller
      */
     public function store(Request $request, Section $section)
     {
-        $student = Student::findOrFail(3);
+        $student = Student::findOrFail($request->input('student_id'));
         $section->students()->attach($student);
+
+        return $student;
     }
 
     /**
