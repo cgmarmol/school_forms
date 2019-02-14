@@ -16,13 +16,22 @@ class SectionController extends Controller
      */
     public function index(Request $request)
     {
+        $sections = null;
+        $filters = $request->input('filters');
+        if($filters && isset($filters['academic_year']) && isset($filters['semester'])) {
+          $sections = Section::where([
+            'academic_year' => $filters['academic_year'],
+            'semester' => $filters['semester']
+          ])
+          ->orderBy('academic_year', 'desc')
+          ->get();
+        }
+
         return [
           'draw' => $request->input('draw'),
-          'recordsTotal' => Section::all()->count(),
-          'recordsFiltered' => Section::all()->count(),
-          'data' => Section::orderBy('academic_year', 'desc')
-            ->orderBy('semester', 'desc')
-            ->get()
+          'recordsTotal' => $sections->count(),
+          'recordsFiltered' => $sections->count(),
+          'data' => $sections
         ];
     }
 

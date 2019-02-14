@@ -3,13 +3,15 @@
 @section('title', 'ASCT Settings > Subjects')
 
 @section('content-header')
-<h1><i class="fa fa-calendar"></i> Enrollment Schedules</h1>
+<h1><i class="fa fa-calendar"></i> Sections</h1>
+<h4>A.Y.: {{ $academic_year }} Semester: {{ $semester }}</h2>
 @endsection
 
 @section('breadcrumb')
 <ol class="breadcrumb">
   <li><a href="{{ url('/') }}"><i class="fa fa-cogs"></i> General Settings</a></li>
-  <li>Enrollment Schedules</li>
+  <li><a href="{{ url('settings/enrollment-schedules') }}"><i class="fa fa-calendar"></i> Enrollment Schedules</a></li>
+  <li>Sections</li>
 </ol>
 @endsection
 
@@ -22,6 +24,8 @@
         <div class="box-body">
           <table id="example1" class="table table-bordered table-striped" width="100%">
             <thead>
+              <th>Section ID</th>
+              <th>Section Name</th>
               <th>Academic Year</th>
               <th>Semester</th>
               <th>&nbsp;</th>
@@ -83,8 +87,10 @@
       'processing': true,
       'responsive': true,
       'serverSide': true,
-      'ajax': '{{ url("api/enrollment-schedules") }}',
+      'ajax': '{{ url("api/sections") }}?filters[academic_year]={{ $academic_year }}&filters[semester]={{ $semester }}',
       'columns': [
+        { 'data': 'id' },
+        { 'data': 'name' },
         { 'data': 'academic_year' },
         { 'data': 'semester' },
         {
@@ -111,7 +117,7 @@
         {
           'data': null,
           'render': function(data, type, row) {
-            var open = '<a href="{{url("settings/sections")}}/'+data.academic_year+'/'+data.semester+'" title="Sections / Subject Offerings"><i class="fa fa-lg fa-list-alt"></i></a>';
+            var open = '<a href="#" title="Sections / Subject Offerings"><i class="fa fa-lg fa-list-alt"></i></a>';
             return open;
           }
         }

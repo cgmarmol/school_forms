@@ -45,6 +45,12 @@ Route::prefix('settings')->group(function() {
       'curricula' => $curricula
     ]);
   });
+  Route::get('sections/{academic_year}/{semester}', function($academic_year, $semester) {
+    return view('settings/sections/index', [
+      'academic_year' => $academic_year,
+      'semester' => $semester
+    ]);
+  });
 });
 
 Route::get('test', function() {
