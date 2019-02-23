@@ -103,6 +103,8 @@ class CurriculumController extends Controller
     public function destroy($id)
     {
         $curriculum = Curriculum::findOrFail($id);
-        return $curriculum->delete();
+        $curriculum->delete();
+      
+        return $curriculum;
     }
 }
