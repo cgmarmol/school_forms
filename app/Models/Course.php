@@ -12,4 +12,9 @@ class Course extends Model
       'code',
       'description'
     ];
+
+    public function curricula()
+    {
+	return $this->hasMany('App\Models\Curriculum', 'course_code', 'code');
+    }
 }
