@@ -20,11 +20,16 @@ class CurriculumSubjectController extends Controller
         $curriculum = Curriculum::find($id);
 
         if($curriculum) {
+          $subjects = $curriculum->subjects()
+          ->offset($request->input('start'))
+          ->limit($request->input('length'))
+          ->orderBy('title', 'asc')
+          ->get();
           return [
             'draw' => $request->input('draw'),
             'recordsTotal' => $curriculum->subjects->count(),
             'recordsFiltered' => $curriculum->subjects->count(),
-            'data' => $curriculum->subjects
+            'data' => $subjects
           ];
         }
 

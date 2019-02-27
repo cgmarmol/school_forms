@@ -11,10 +11,10 @@ class CurriculaTableSeeder extends Seeder
      */
     public function run()
     {
-	$course = App\Models\Course::where('code', '=', 'K to 12')->first();
-	$course->curricula()->delete();
-	$course->curricula()->saveMany(
-	   factory(App\Models\Curriculum::class,100)->make()
-	);
+	      $course = App\Models\Course::where('code', '=', 'K to 12')->first();
+	      $course->curricula()->delete();
+       $course->curricula()->saveMany(
+	         factory(App\Models\Curriculum::class,100)->make()
+	      );
     }
 }

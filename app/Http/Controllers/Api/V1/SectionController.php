@@ -23,14 +23,20 @@ class SectionController extends Controller
             'academic_year' => $filters['academic_year'],
             'semester' => $filters['semester']
           ])
-          ->orderBy('academic_year', 'desc')
+          ->orderBy('academic_year', 'desc');
+          
+          $sectionsCount = clone $sections;
+          $sectionsCount = $sectionsCount->count();
+          
+          $sections = $sections->offset($request->input('start'))
+          ->limit($request->input('length'))
           ->get();
         }
 
         return [
           'draw' => $request->input('draw'),
-          'recordsTotal' => $sections->count(),
-          'recordsFiltered' => $sections->count(),
+          'recordsTotal' => $sectionsCount,
+          'recordsFiltered' => $sectionsCount,
           'data' => $sections
         ];
     }

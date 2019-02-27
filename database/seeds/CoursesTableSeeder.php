@@ -11,6 +11,7 @@ class CoursesTableSeeder extends Seeder
      */
     public function run()
     {
+        App\Models\Course::whereNotNull('code')->delete();
         App\Models\Course::create([
           'code' => 'K to 12',
           'description' => 'Kindergarten and 12 years of basic education'
