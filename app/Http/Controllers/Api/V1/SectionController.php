@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Person;
 use App\Models\Section;
 
+use App\Transformers\SectionTransformer;
+
 class SectionController extends Controller
 {
     /**
@@ -24,20 +26,21 @@ class SectionController extends Controller
             'semester' => $filters['semester']
           ])
           ->orderBy('academic_year', 'desc');
-          
+
           $sectionsCount = clone $sections;
           $sectionsCount = $sectionsCount->count();
-          
-          $sections = $sections->offset($request->input('start'))
-          ->limit($request->input('length'))
-          ->get();
+
+          $sections = $sections->paginate($request->input('length'));
+
         }
+
+        return $this->response->paginator($sections, new SectionTransformer);
 
         return [
           'draw' => $request->input('draw'),
           'recordsTotal' => $sectionsCount,
           'recordsFiltered' => $sectionsCount,
-          'data' => $sections
+          'data' =>   $sections
         ];
     }
 

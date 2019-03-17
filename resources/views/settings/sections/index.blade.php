@@ -17,7 +17,7 @@
 
 @section('content')
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-12">
     <div class="box box-primary">
       <!-- form start -->
       <form role="form">
@@ -26,14 +26,18 @@
             <thead>
               <th>Section ID</th>
               <th>Section Name</th>
-              <th>Academic Year</th>
-              <th>Semester</th>
+              <th>Subject Name</th>
+              <th>Grade Level</th>
+              <th>No. of Students</th>
               <th>&nbsp;</th>
               <th>&nbsp;</th>
             </thead>
             <tfoot>
-              <th>Academic Year</th>
-              <th>Semester</th>
+              <th>Section ID</th>
+              <th>Section Name</th>
+              <th>Subject Title</th>
+              <th>Grade Level</th>
+              <th>No. of Students</th>
               <th>&nbsp;</th>
               <th>&nbsp;</th>
             </tfoot>
@@ -47,10 +51,12 @@
       </form>
     </div>
   </div>
-  <div class="col-md-4">
+</div>
+<div class="row">
+  <div class="col-md-12">
     <div class="box box-primary">
       <div class="box-header with-border">
-        <h3 class="box-title">Add New Enrollment Schedule</h3>
+        <h3 class="box-title">Add New Section</h3>
       </div>
       <!-- /.box-header -->
       <!-- form start -->
@@ -58,7 +64,7 @@
         <div class="box-body">
           <div class="callout"></div>
           <div class="form-group">
-            <label for="description">Academic Year</label>
+            <label for="description">Section Name</label>
             <input type="text" class="form-control" id="academic_year" name="academic_year" placeholder="Enter curriculum description">
             <span class="help-block"></span>
           </div>
@@ -87,12 +93,27 @@
       'processing': true,
       'responsive': true,
       'serverSide': true,
-      'ajax': '{{ url("api/sections") }}?filters[academic_year]={{ $academic_year }}&filters[semester]={{ $semester }}',
+      'searching': false,
+      'ajax': {
+        'url': '{{ url("api/sections") }}?filters[academic_year]={{ $academic_year }}&filters[semester]={{ $semester }}&include=subject',
+        'data': function(d) {
+          return $.extend({}, d, {
+            'page': d.start / d.length + 1
+          });
+        },
+        'dataSrc': function(json) {
+          json.start = (json.meta.pagination.current_page-1) * json.meta.pagination.per_page;
+          json.length = json.meta.pagination.per_page;
+          json.recordsTotal = json.recordsFiltered = json.meta.pagination.total;
+          return json.data;
+        }
+      },
       'columns': [
         { 'data': 'id' },
         { 'data': 'name' },
-        { 'data': 'academic_year' },
-        { 'data': 'semester' },
+        { 'data': 'subject.data.title' },
+        { 'data': 'subject.data.level' },
+        { 'data': 'number_students' },
         {
           'data': null,
           'render': function(data, type, row) {

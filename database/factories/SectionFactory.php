@@ -17,6 +17,6 @@ $factory->define(App\Models\Section::class, function (Faker $faker) {
     return [
         'academic_year' => '2019-2020',
         'semester' => rand(1, 2),
-        'name' => $faker->text()
+        'name' => $faker->word
     ];
 });

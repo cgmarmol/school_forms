@@ -124,12 +124,13 @@
       $(this).closest('.form-group').find('.help-block').html('');
     });
     $('body').on('change', '.enrollment-schedule-is-open', function() {
+      var enrollmentSchedule = $(this).attr('name');
       var isOpen = $(this).val();
       $.ajax({
         type: 'PATCH',
-        url: '{{ url("api/enrollment-schedules/2020-2021_2") }}',
+        url: '{{ url("api/enrollment-schedules") }}/' + enrollmentSchedule,
         success: function(r) {
-
+          console.log(r);
         }
       });
     });

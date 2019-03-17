@@ -75,7 +75,18 @@ class EnrollmentScheduleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return $id;
+        $temp = explode('_', $id);
+        $schoolYear = $temp[0];
+        $semester = $temp[1];
+
+        $enrollmentSchedule = EnrollmentSchedule::where('academic_year', '=', $schoolYear)
+          ->where('semester', '=', $semester)
+          ->first();
+
+        $enrollmentSchedule->is_open = $enrollmentSchedule->is_open ? 0 : 1;
+        $enrollmentSchedule->save();
+
+        return $enrollmentSchedule;
     }
 
     /**

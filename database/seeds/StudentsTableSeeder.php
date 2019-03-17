@@ -11,9 +11,9 @@ class StudentsTableSeeder extends Seeder
      */
     public function run()
     {
-	      App\Models\Student::where('id', '>', 0)->delete();   
+	      App\Models\Student::where('id', '>', 0)->delete();
 	      App\Models\Person::where('id', '>', 0)->delete();
-	      factory(App\Models\Person::class, 1000)->create()->each(function($u) {
+	      factory(App\Models\Person::class, 500)->create()->each(function($u) {
           $u->student()->save(factory(App\Models\Student::class)->make());
        });
     }

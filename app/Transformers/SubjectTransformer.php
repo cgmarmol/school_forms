@@ -11,7 +11,8 @@ class SubjectTransformer extends TransformerAbstract
           'id' => (int) $subject->id,
           'code' => (string) $subject->code,
           'title' => $subject->title,
-          'description' => $subject->description
+          'description' => $subject->description,
+          'level' => $subject->level
         ];
     }
 }

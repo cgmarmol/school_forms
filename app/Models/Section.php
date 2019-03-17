@@ -21,4 +21,9 @@ class Section extends Model
           ->withPivot(['grade'])
           ->withTimestamps();
     }
+
+    public function subject()
+    {
+        return $this->belongsTo('App\Models\Subject');
+    }
 }

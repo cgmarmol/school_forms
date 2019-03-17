@@ -14,13 +14,14 @@ class CreateEnrollmentSchedulesTable extends Migration
     public function up()
     {
         Schema::create('enrollment_schedules', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('academic_year');
             $table->tinyInteger('semester');
             $table->boolean('is_open')->default(false);
-            
+
             $table->timestamps();
 
-            $table->primary(['academic_year', 'semester']);
+            $table->unique(['academic_year', 'semester']);
         });
     }
 

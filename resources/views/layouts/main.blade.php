@@ -108,7 +108,7 @@
                   </span>
                 </a>
                 <ul class="treeview-menu">
-                  <li><a href="{{ url('/') }}"><i class="fa fa-user-plus"></i> Enroll Student</a></li>
+                  <li><a href="{{ url('/enroll') }}"><i class="fa fa-user-plus"></i> Enroll Student</a></li>
                   <li><a href="{{ url('/') }}"><i class="fa fa-list-alt"></i> Student Masterlist</a></li>
                 </ul>
               </li>
