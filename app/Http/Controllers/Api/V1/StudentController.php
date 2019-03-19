@@ -21,13 +21,24 @@ class StudentController extends Controller
      * @Get("/")
      * @Versions({"v1"})
      */
-    public function index()
+    public function index(Request $request)
     {
-      return $this->response->collection(
-        Student::all(),
-        new StudentTransformer,
-        ['key' => 'students']
-      );
+      $term = $request->input('term');
+
+      if(isset($term) && strlen($term) > 0)
+      {
+        return $this->response->collection(
+          Student::where('LRN', 'like', '%'.$term.'%')
+            ->orWhereHas('person', function($query) use ($term) {
+              $query->Where('last_name', 'like', '%'.$term.'%');
+            })
+            ->get(),
+          new StudentTransformer,
+          ['key' => 'students']
+        );
+      }
+
+      return null;
     }
 
     /**

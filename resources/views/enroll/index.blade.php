@@ -52,11 +52,7 @@
             </div>
 
             <select class="form-control" id="student_id" name="student_id">
-              @foreach($students as $student)
-              <option value="{{$student->id}}">
-                {{$student->LRN}} {{$student->person->last_name}} {{$student->person->first_name}}
-              </option>
-              @endforeach
+
             </select>
 
             <span class="help-block"></span>
@@ -76,7 +72,23 @@
 @section('custom-scripts')
 <script type="text/javascript">
   $(function() {
-    $('#student_id').select2();
+    $('#student_id').select2({
+      ajax: {
+        url: '{{ url("api/students") }}',
+        dataType: 'json',
+        minimumInputLength: 2,
+        processResults: function (data) {
+          return {
+            results: $.map(data.students, function(student) {
+              return {
+                id: student.LRN,
+                text: student.LRN + ' ' + student.last_name + ', ' + student.first_name
+              }
+            })
+          }
+        }
+      }
+    });
   });
 </script>
 @endsection

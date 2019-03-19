@@ -15,7 +15,8 @@ class StudentTransformer extends TransformerAbstract
           'id' => (int) $student->id,
           'LRN' => (string) $student->LRN,
           'first_name' => $person->first_name,
-          'middle_name' => $person->middle_name
+          'middle_name' => $person->middle_name,
+          'last_name' => $person->last_name
         ];
     }
 }
