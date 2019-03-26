@@ -32,6 +32,7 @@ $api->version('v1', ['middleware' => 'bindings'], function($api) {
   $api->resource('curricula/{id}/subjects', 'App\Http\Controllers\Api\V1\CurriculumSubjectController');
 
   $api->resource('enrollment-schedules', 'App\Http\Controllers\Api\V1\EnrollmentScheduleController');
+  $api->get('active-enrollment-schedules', 'App\Http\Controllers\Api\V1\EnrollmentScheduleController@activeEnrollmentSchedules');
 
   $api->resource('sections', 'App\Http\Controllers\Api\V1\SectionController');
   $api->resource('sections.students', 'App\Http\Controllers\Api\V1\SectionStudentController');

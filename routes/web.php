@@ -20,33 +20,19 @@ Route::get('/', function () {
 });
 
 Route::get('/enroll', function () {
-    $openEnrollmentSchedules = App\Models\EnrollmentSchedule::where('is_open', '=', 1)
-        ->orderBy('academic_year', 'desc')
-        ->orderBy('semester', 'desc')
-        ->get();
+    return view('enroll/index', []);
+});
 
-    $students = App\Models\Student::all();
-
-    return view('enroll/index', [
-      'openEnrollmentSchedules' => $openEnrollmentSchedules,
-      'students' => $students
+Route::get('/enroll/{academic_year}/{semester}/{studentId}', function ($academic_year, $semester, $studentId) {
+    return view('enroll/show', [
+      'academic_year' => $academic_year,
+      'semester' => $semester,
+      'studentId' => $studentId
     ]);
 });
 
-Route::get('/enroll/{academic_year}/{semester}', function ($academic_year, $semester) {
-    $openEnrollmentSchedule = App\Models\EnrollmentSchedule::where('is_open', '=', 1)
-        ->where('academic_year', '=', $academic_year)
-        ->where('semester', '=', $semester)
-        ->first();
-
-    $sections = App\Models\Section::where('academic_year', '=', $openEnrollmentSchedule->academic_year)
-        ->where('semester', '=', $openEnrollmentSchedule->semester)
-        ->get();
-
-    return view('enroll/show', [
-      'openEnrollmentSchedule' => $openEnrollmentSchedule,
-      'sections' => $sections
-    ]);
+Route::get('/sections', function() {
+    return view('sections/index', []);
 });
 
 // Settings

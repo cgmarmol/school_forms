@@ -17,22 +17,13 @@
 <div class="row">
   <div class="col-md-12">
     <div class="box box-primary">
-      <div class="box-header with-border">
-        <h3 class="box-title">Add New Curriculum</h3>
-      </div>
-      <!-- /.box-header -->
       <!-- form start -->
-      <form id="newSubjectForm" role="form">
+      <form id="enrollStudentForm" role="form">
         <div class="box-body">
           <div class="callout"></div>
           <div class="form-group">
             <label for="code">Enrollment Schedule</label>
-            <select class="form-control" id="course_code" name="course_code">
-              @foreach($openEnrollmentSchedules as $openEnrollmentSchedule)
-              <option value="{{$openEnrollmentSchedule->academic_year}}/{{$openEnrollmentSchedule->semester}}">
-                Academic Year: {{$openEnrollmentSchedule->academic_year}}
-                Semester: {{$openEnrollmentSchedule->semester}}</option>
-              @endforeach
+            <select class="form-control" id="enrollment_schedule" name="enrollment_schedule">
             </select>
             <span class="help-block"></span>
           </div>
@@ -40,21 +31,18 @@
             <label for="description">Student</label>
             <div class="radio">
               <label>
-                <input type="radio" name="optionsRadios" id="newStudent" checked>
+                <input type="radio" name="student_type" id="newStudent" value="old" checked>
                 Old Student
               </label>
             </div>
             <div class="radio">
               <label>
-                <input type="radio" name="optionsRadios" id="oldStudent">
+                <input type="radio" name="student_type" id="oldStudent" value="new">
                 New Student
               </label>
             </div>
-
-            <select class="form-control" id="student_id" name="student_id">
-
+            <select class="form-control" name="student_id" id="student_id">
             </select>
-
             <span class="help-block"></span>
           </div>
         </div>
@@ -72,7 +60,26 @@
 @section('custom-scripts')
 <script type="text/javascript">
   $(function() {
+    $('.callout', '#enrollStudentForm').hide();
+    $('#enrollment_schedule').select2({
+      placeholder: 'Select enrollment schedule',
+      ajax: {
+        url: '{{ url("api/active-enrollment-schedules") }}',
+        dataType: 'json',
+        processResults: function (data) {
+          return {
+            results: $.map(data['enrollment-schedules'], function(schedule) {
+              return {
+                id: schedule.academic_year + '_' + schedule.semester,
+                text: schedule.semester + ' Semester, A.Y.   ' + schedule.academic_year
+              }
+            })
+          }
+        }
+      }
+    });
     $('#student_id').select2({
+      placeholder: 'Enter LRN, first name, or last name',
       ajax: {
         url: '{{ url("api/students") }}',
         dataType: 'json',
@@ -81,13 +88,41 @@
           return {
             results: $.map(data.students, function(student) {
               return {
-                id: student.LRN,
+                id: student.id,
                 text: student.LRN + ' ' + student.last_name + ', ' + student.first_name
               }
             })
           }
         }
       }
+    });
+    $('#enrollStudentForm').submit(function(e) {
+      e.preventDefault();
+      var ref = this;
+      var data = $(ref).serialize();
+
+      $('.form-group').removeClass('has-error');
+      $('.help-block').html('');
+
+      $.post('{{ url("api/students") }}', data, function(r) {
+        $('.callout', ref).addClass('callout-success').show().fadeOut(3000).text('Successfully registered new curriculum.');
+        ref.reset();
+        location.href = location.href + "/" + r.meta.academic_year + "/" + r.meta.semester + "/" + r.student.id;
+      }).fail(function(r) {
+        if(r.responseJSON !== undefined) {
+          var responseJSON = r.responseJSON;
+          if(responseJSON.status_code === 422) {
+            var errors = responseJSON.errors;
+            if(errors !== undefined) {
+              $.each(errors, function(key, value) {
+                var errorMessage = value[0];
+                $('#'+key, ref).closest('.form-group').addClass('has-error');
+                $('#'+key, ref).closest('.form-group').find('.help-block').html(errorMessage);
+              });
+            }
+          }
+        }
+      });
     });
   });
 </script>

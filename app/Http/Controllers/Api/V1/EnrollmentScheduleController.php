@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\EnrollmentSchedule;
 
+use App\Transformers\EnrollmentScheduleTransformer;
+
 class EnrollmentScheduleController extends Controller
 {
     /**
@@ -98,5 +100,19 @@ class EnrollmentScheduleController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function activeEnrollmentSchedules()
+    {
+        $enrollmentSchedules = EnrollmentSchedule::orderBy('academic_year', 'desc')
+          ->where('is_open', '=', 1)
+          ->orderBy('semester', 'desc')
+          ->get();
+
+        if($enrollmentSchedules) {
+          return $this->response->collection($enrollmentSchedules, new EnrollmentScheduleTransformer(), ['key' => 'enrollment-schedules']);
+        }
+
+        return null;
     }
 }

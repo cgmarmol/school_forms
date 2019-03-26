@@ -16,4 +16,8 @@ class Student extends Model
     {
       return $this->belongsTo('App\Models\Person');
     }
+
+    public function sections() {
+      return $this->belongsToMany('App\Models\Section');
+    }
 }

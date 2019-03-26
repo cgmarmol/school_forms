@@ -20,12 +20,20 @@ class SectionController extends Controller
     {
         $sections = null;
         $filters = $request->input('filters');
+
         if($filters && isset($filters['academic_year']) && isset($filters['semester'])) {
           $sections = Section::where([
             'academic_year' => $filters['academic_year'],
             'semester' => $filters['semester']
           ])
           ->orderBy('academic_year', 'desc');
+
+          if(isset($filters['student_id'])) {
+            $studentId = $filters['student_id'];
+            $sections = $sections->whereDoesntHave('students', function($query) use ($studentId){
+              $query->where('students.id', '=', $studentId);
+            });
+          }
 
           $sectionsCount = clone $sections;
           $sectionsCount = $sectionsCount->count();
