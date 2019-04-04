@@ -13,7 +13,7 @@ class StudentsTableSeeder extends Seeder
     {
 	      App\Models\Student::where('id', '>', 0)->delete();
 	      App\Models\Person::where('id', '>', 0)->delete();
-	      factory(App\Models\Person::class, 500)->create()->each(function($u) {
+	      factory(App\Models\Person::class, 100)->create()->each(function($u) {
           $u->student()->save(factory(App\Models\Student::class)->make());
        });
     }

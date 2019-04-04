@@ -101,7 +101,7 @@
       'serverSide': true,
       'searching': false,
       'ajax': {
-        'url': '{{ url("api/sections") }}?filters[academic_year]={{ $academic_year }}&filters[semester]={{ $semester }}&filters[student_id]={{ $studentId }}&include=subject',
+        'url': '{{ url("api/sections") }}?token='+token+'&filters[academic_year]={{ $academic_year }}&filters[semester]={{ $semester }}&filters[student_id]={{ $studentId }}&include=subject',
         'data': function(d) {
           return $.extend({}, d, {
             'page': d.start / d.length + 1
@@ -138,7 +138,7 @@
       'searching': false,
       'paging': false,
       'ajax': {
-        'url': '{{ url("api/students/".$studentId) }}?include=sections.subject&filters[academic_year]={{ $academic_year }}&filters[semester]={{ $semester }}',
+        'url': '{{ url("api/students/".$studentId) }}?token='+token+'&include=sections.subject&filters[academic_year]={{ $academic_year }}&filters[semester]={{ $semester }}',
         'dataSrc': function(json) {
           json.recordsTotal = json.recordsFiltered = json.student.sections.data.length;
           return json.student.sections.data;
@@ -159,7 +159,7 @@
         }
       ]
     });
-    $.get('{{ url("api/students/".$studentId) }}', function(r) {
+    $.get('{{ url("api/students/".$studentId) }}?token='+token, function(r) {
       $('.student-LRN').text(r.student.LRN);
       $('.student-last_name').text(r.student.last_name);
       $('.student-first_name').text(r.student.first_name);
@@ -169,7 +169,7 @@
       var sectionId = $(this).data('section_id');
       var studentId = '{{ $studentId }}';
 
-      $.post('{{ url("api/sections") }}/'+sectionId+'/students', { student_id: studentId }, function(r) {
+      $.post('{{ url("api/sections") }}/'+sectionId+'/students?token='+token, { student_id: studentId }, function(r) {
         availableSectionsTable.draw();
         enrolledSectionsTable.draw();
       });
@@ -179,7 +179,7 @@
       var studentId = '{{ $studentId }}';
 
       $.ajax({
-        'url': '{{ url("api/sections") }}/'+sectionId+'/students/'+studentId,
+        'url': '{{ url("api/sections") }}/'+sectionId+'/students/'+studentId+'?token='+token,
         'method': 'DELETE',
         'success': function(r) {
           availableSectionsTable.draw();

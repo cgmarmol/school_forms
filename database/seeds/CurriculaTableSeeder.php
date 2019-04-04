@@ -14,7 +14,7 @@ class CurriculaTableSeeder extends Seeder
 	      $course = App\Models\Course::where('code', '=', 'K to 12')->first();
 	      $course->curricula()->delete();
        $course->curricula()->saveMany(
-	         factory(App\Models\Curriculum::class,100)->make()
+	         factory(App\Models\Curriculum::class,10)->make()
 	      );
     }
 }

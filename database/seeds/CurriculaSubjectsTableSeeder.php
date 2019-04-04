@@ -15,7 +15,7 @@ class CurriculaSubjectsTableSeeder extends Seeder
        if($curricula->count()>0){
           $curricula->each(function($curriculum){
              $curriculum->subjects()->saveMany(
-                   factory(App\Models\Subject::class,10)->make()
+                   factory(App\Models\Subject::class,5)->make()
                 );
           });
        }

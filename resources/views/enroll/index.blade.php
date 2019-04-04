@@ -64,7 +64,7 @@
     $('#enrollment_schedule').select2({
       placeholder: 'Select enrollment schedule',
       ajax: {
-        url: '{{ url("api/active-enrollment-schedules") }}',
+        url: '{{ url("api/active-enrollment-schedules") }}?token='+token,
         dataType: 'json',
         processResults: function (data) {
           return {
@@ -81,7 +81,7 @@
     $('#student_id').select2({
       placeholder: 'Enter LRN, first name, or last name',
       ajax: {
-        url: '{{ url("api/students") }}',
+        url: '{{ url("api/students") }}?token='+token,
         dataType: 'json',
         minimumInputLength: 2,
         processResults: function (data) {
@@ -104,7 +104,7 @@
       $('.form-group').removeClass('has-error');
       $('.help-block').html('');
 
-      $.post('{{ url("api/students") }}', data, function(r) {
+      $.post('{{ url("api/students") }}?token='+token, data, function(r) {
         $('.callout', ref).addClass('callout-success').show().fadeOut(3000).text('Successfully registered new curriculum.');
         ref.reset();
         location.href = location.href + "/" + r.meta.academic_year + "/" + r.meta.semester + "/" + r.student.id;

@@ -63,6 +63,9 @@ Route::prefix('settings')->group(function() {
       'semester' => $semester
     ]);
   });
+  Route::get('user-accounts', function() {
+    return view('settings/user-accounts/index');
+  });
 });
 
 Route::get('test', function() {
@@ -73,4 +76,15 @@ Route::get('test', function() {
   $curriculum->subjects()->save($subject);
 
   return $curriculum->subjects;
+});
+
+
+Route::get('fake-account', function() {
+  $user = App\User::create([
+    'name' => 'Dave Medrano',
+    'email' => 'evadonardem@gmail.com',
+    'password' => md5('123456')
+  ]);
+
+  return $user;
 });

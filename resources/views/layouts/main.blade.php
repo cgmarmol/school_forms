@@ -35,7 +35,7 @@
                 <li class="dropdown user user-menu">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <img src="{{ asset('images/avatar.jpeg') }}" class="user-image" alt="User Image">
-                    <span class="hidden-xs">Christopher Marmol</span>
+                    <span class="hidden-xs user-name"></span>
                   </a>
                   <ul class="dropdown-menu">
                     <!-- User image -->
@@ -43,8 +43,8 @@
                       <img src="{{ asset('images/avatar.jpeg') }}" class="img-circle" alt="User Image">
 
                       <p>
-                        Christopher Marmol - Teacher
-                        <small>Member since Nov. 2012</small>
+                        <span class="user-name"></span>
+                        <small>Member since <span class="user-created-at"></span></small>
                       </p>
                     </li>
                     <!-- Menu Body -->
@@ -68,7 +68,7 @@
                         <a href="#" class="btn btn-default btn-flat">Profile</a>
                       </div>
                       <div class="pull-right">
-                        <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                        <a href="#" class="logout btn btn-default btn-flat">Logout</a>
                       </div>
                     </li>
                   </ul>
@@ -94,7 +94,7 @@
                 <img src="{{ asset('images/avatar.jpeg') }}" class="img-circle" alt="User Image">
               </div>
               <div class="pull-left info">
-                <p>Christopher Marmol</p>
+                <p class="user-name"></p>
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
               </div>
             </div>
@@ -131,7 +131,7 @@
                     </a>
                   </li>
                   <li>
-                    <a href="#">
+                    <a href="{{ url('settings/user-accounts') }}">
                       <i class="fa fa-users"></i> <span>User Accounts</span>
                     </a>
                   </li>
@@ -357,6 +357,35 @@
 
       </div>
       <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+      <script type="text/javascript">
+        var token = null;
+        $(function() {
+          var cookies = document.cookie.split(';');
+          for(i in cookies) {
+            if(cookies[i].includes('authentication-token=')) {
+              token = cookies[i].replace('authentication-token=', '');
+              break;
+            }
+          }
+          if(token) {
+            $.get('{{ url("api/authentication/user") }}?token='+token, function(r) {
+              var name = r.name;
+              var createdAt = r.created_at;
+              $('.user-name').text(name);
+              $('.user-created-at').text(createdAt);
+            }).fail(function() {
+              location.href = '{{ url("login")}}';
+            });
+          }
+          $('.logout').on('click', function() {
+            $.get('{{ url("api/authentication/logout") }}?token='+token, function(r) {
+              if(r.success) {
+                location.href = '{{ url("login") }}';
+              }
+            });
+          });
+        });
+      </script>
       @yield('custom-scripts')
     </body>
 </html>

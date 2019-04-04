@@ -17,7 +17,7 @@ class SectionsTableSeeder extends Seeder
        if($subjects->count()>0){
           $subjects->each(function($subject){
              $subject->sections()->saveMany(
-                   factory(App\Models\Section::class,10)->make()
+                   factory(App\Models\Section::class,5)->make()
                 );
           });
        }

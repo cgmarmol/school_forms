@@ -20,10 +20,24 @@ use Illuminate\Http\Request;
 $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', ['middleware' => 'bindings'], function($api) {
-
   $api->get('/', function() {
     return 'School Forms API';
   });
+  $api->post('login', 'App\Http\Controllers\Api\V1\AuthenticateController@login');
+});
+
+$api->version('v1', ['middleware' => 'bindings', 'api.auth'], function($api) {
+
+  // refresh token
+  $api->get('authentication/refresh', 'App\Http\Controllers\Api\V1\AuthenticateController@token');
+
+  // authenticated user
+  $api->get('authentication/user', function() {
+    return app('Dingo\Api\Auth\Auth')->user();
+  });
+
+  // authentication --- logout
+  $api->get('authentication/logout', 'App\Http\Controllers\Api\V1\AuthenticateController@logout');
 
   $api->resource('students', 'App\Http\Controllers\Api\V1\StudentController');
   $api->resource('subjects', 'App\Http\Controllers\Api\V1\SubjectController');

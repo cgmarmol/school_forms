@@ -15,7 +15,7 @@
 
 @section('content')
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-12">
     <div class="box box-primary">
       <!-- form start -->
       <form role="form">
@@ -43,10 +43,10 @@
       </form>
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-12">
     <div class="box box-primary">
       <div class="box-header with-border">
-        <h3 class="box-title">Add New Enrollment Schedule</h3>
+        <h3 class="box-title">Add User</h3>
       </div>
       <!-- /.box-header -->
       <!-- form start -->
@@ -54,13 +54,23 @@
         <div class="box-body">
           <div class="callout"></div>
           <div class="form-group">
-            <label for="description">Academic Year</label>
-            <input type="text" class="form-control" id="academic_year" name="academic_year" placeholder="Enter curriculum description">
+            <label for="description">School ID No.</label>
+            <input type="text" class="form-control" id="school_id" name="school_id" placeholder="Enter School ID No.">
             <span class="help-block"></span>
           </div>
           <div class="form-group">
-            <label for="description">Semester</label>
-            <input type="text" class="form-control" id="semester" name="semester" placeholder="Enter curriculum description">
+            <label for="last_name">Last Name</label>
+            <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter last name">
+            <span class="help-block"></span>
+          </div>
+          <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter first name">
+            <span class="help-block"></span>
+          </div>
+          <div class="form-group">
+            <label for="first_name">Middle Name</label>
+            <input type="text" class="form-control" id="middle_name" name="middle_name" placeholder="Enter middle name">
             <span class="help-block"></span>
           </div>
         </div>
@@ -83,7 +93,7 @@
       'processing': true,
       'responsive': true,
       'serverSide': true,
-      'ajax': '{{ url("api/enrollment-schedules") }}?token='+token,
+      'ajax': '{{ url("api/enrollment-schedules") }}',
       'columns': [
         { 'data': 'academic_year' },
         { 'data': 'semester' },
@@ -128,7 +138,7 @@
       var isOpen = $(this).val();
       $.ajax({
         type: 'PATCH',
-        url: '{{ url("api/enrollment-schedules") }}/'+enrollmentSchedule+'?token='+token,
+        url: '{{ url("api/enrollment-schedules") }}/' + enrollmentSchedule,
         success: function(r) {
           console.log(r);
         }
@@ -140,7 +150,7 @@
       var ref = this;
       var data = $(ref).serialize();
 
-      $.post('{{ url("api/enrollment-schedules") }}?token='+token, data, function(r) {
+      $.post('{{ url("api/enrollment-schedules") }}', data, function(r) {
         $('.callout', ref).addClass('callout-success').show().fadeOut(3000).text('Successfully registered new curriculum.');
         ref.reset();
         subjectsMasterList.draw();

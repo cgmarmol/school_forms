@@ -19,13 +19,13 @@
           </div>
           <div class="login-box-body">
             <p class="login-box-msg">Sign in to start your session</p>
-            <form class="" action="index.html" method="post">
+            <form>
               <div class="form-group has-feedback">
-                <input type="email" class="form-control" placeholder="Email">
+                <input type="email" class="user-email form-control" placeholder="Email">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
               </div>
               <div class="form-group has-feedback">
-                <input type="password" class="form-control" placeholder="Password">
+                <input type="password" class="user-password form-control" placeholder="Password">
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
               </div>
               <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
@@ -35,5 +35,33 @@
             <a href="register.html" class="text-center">Register a new membership</a>
           </div>
         </div>
+        <script>
+        $(function() {
+
+          var cookies = document.cookie.split(';');
+          var token = null;
+          for(i in cookies) {
+            if(cookies[i].includes('authentication-token=')) {
+              token = cookies[i].replace('authentication-token=', '');
+              break;
+            }
+          }
+          if(token) {
+            $.get('{{ url("api/authentication/user") }}?token='+token, function() {
+              location.href = '{{ url("/") }}';
+            });
+          }
+
+          $('form').submit(function(e) {
+            e.preventDefault();
+            var email = $('.user-email', $(this)).val();
+            var password = $('.user-password', $(this)).val();
+            $.post('{{ url("api/login") }}', {email: email, password: password}, function(r) {
+              document.cookie = 'authentication-token='+r.token;
+              location.href = '{{ url("/") }}';
+            });
+          });
+        });
+        </script>
     </body>
 </html>
