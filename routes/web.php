@@ -68,23 +68,19 @@ Route::prefix('settings')->group(function() {
   });
 });
 
-Route::get('test', function() {
-  $subject = App\Models\Subject::where('code', 'MATH_G01')->first();
-  $curriculum = App\Models\Curriculum::find(1);
+Route::get('master-account', function() {
 
-  $curriculum->subjects()->detach();
-  $curriculum->subjects()->save($subject);
+  $person = App\Models\Person::create([
+    'first_name' => 'Dave',
+    'middle_name' => 'Hidalgo',
+    'last_name' => 'Medrano',
+    'gender' => 'M'
+  ]);
 
-  return $curriculum->subjects;
-});
-
-
-Route::get('fake-account', function() {
-  $user = App\User::create([
-    'name' => 'Dave Medrano',
+  $person->user()->create([
     'email' => 'evadonardem@gmail.com',
     'password' => md5('123456')
   ]);
 
-  return $user;
+  return $person->user;
 });

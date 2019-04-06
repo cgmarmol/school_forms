@@ -26,15 +26,13 @@ $api->version('v1', ['middleware' => 'bindings'], function($api) {
   $api->post('login', 'App\Http\Controllers\Api\V1\AuthenticateController@login');
 });
 
-$api->version('v1', ['middleware' => 'bindings', 'api.auth'], function($api) {
+$api->version('v1', ['middleware' => ['api.auth', 'bindings']], function($api) {
 
   // refresh token
   $api->get('authentication/refresh', 'App\Http\Controllers\Api\V1\AuthenticateController@token');
 
   // authenticated user
-  $api->get('authentication/user', function() {
-    return app('Dingo\Api\Auth\Auth')->user();
-  });
+  $api->get('authentication/user', 'App\Http\Controllers\Api\V1\AuthenticateController@user');
 
   // authentication --- logout
   $api->get('authentication/logout', 'App\Http\Controllers\Api\V1\AuthenticateController@logout');
@@ -51,4 +49,5 @@ $api->version('v1', ['middleware' => 'bindings', 'api.auth'], function($api) {
   $api->resource('sections', 'App\Http\Controllers\Api\V1\SectionController');
   $api->resource('sections.students', 'App\Http\Controllers\Api\V1\SectionStudentController');
 
+  $api->resource('users', 'App\Http\Controllers\Api\V1\UserController');
 });

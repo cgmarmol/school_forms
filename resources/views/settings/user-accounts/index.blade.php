@@ -22,14 +22,18 @@
         <div class="box-body">
           <table id="example1" class="table table-bordered table-striped" width="100%">
             <thead>
-              <th>Academic Year</th>
-              <th>Semester</th>
+              <th>Last Name</th>
+              <th>First Name</th>
+              <th>Middle Name</th>
+              <th>Gender</th>
               <th>&nbsp;</th>
               <th>&nbsp;</th>
             </thead>
             <tfoot>
-              <th>Academic Year</th>
-              <th>Semester</th>
+              <th>Last Name</th>
+              <th>First Name</th>
+              <th>Middle Name</th>
+              <th>Gender</th>
               <th>&nbsp;</th>
               <th>&nbsp;</th>
             </tfoot>
@@ -54,11 +58,6 @@
         <div class="box-body">
           <div class="callout"></div>
           <div class="form-group">
-            <label for="description">School ID No.</label>
-            <input type="text" class="form-control" id="school_id" name="school_id" placeholder="Enter School ID No.">
-            <span class="help-block"></span>
-          </div>
-          <div class="form-group">
             <label for="last_name">Last Name</label>
             <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter last name">
             <span class="help-block"></span>
@@ -71,6 +70,19 @@
           <div class="form-group">
             <label for="first_name">Middle Name</label>
             <input type="text" class="form-control" id="middle_name" name="middle_name" placeholder="Enter middle name">
+            <span class="help-block"></span>
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <select class="form-control" id="gender" name="gender">
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+            </select>
+            <span class="help-block"></span>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" name="email" placeholder="Enter email">
             <span class="help-block"></span>
           </div>
         </div>
@@ -87,89 +99,6 @@
 
 @section('custom-scripts')
 <script type="text/javascript">
-  $(function() {
-    var subjectsMasterList = $('#example1').DataTable({
-      'ordering': false,
-      'processing': true,
-      'responsive': true,
-      'serverSide': true,
-      'ajax': '{{ url("api/enrollment-schedules") }}',
-      'columns': [
-        { 'data': 'academic_year' },
-        { 'data': 'semester' },
-        {
-          'data': null,
-          'render': function(data, type, row) {
-            var open = '<div class="form-group">'+
-              '<div class="radio">'+
-                '<label>'+
-                  '<input type="radio" name="' + data.academic_year + "_" + data.semester + '_is_open" value="1" class="enrollment-schedule-is-open" ' + (data.is_open == 1 ? 'checked' : '') + '>'+
-                  '&nbsp;Open' +
-                '</label>'+
-              '</div>&nbsp;&nbsp;'+
-              '<div class="radio">'+
-                '<label>'+
-                  '<input type="radio" name="' + data.academic_year + "_" + data.semester + '_is_open" value="0" class="enrollment-schedule-is-open" ' + (data.is_open == 0 ? 'checked' : '') + '>'+
-                  '&nbsp;Closed' +
-                '</label>'+
-              '</div>'+
-            '</div>';
 
-            return open;
-          }
-        },
-        {
-          'data': null,
-          'render': function(data, type, row) {
-            var open = '<a href="{{url("settings/sections")}}/'+data.academic_year+'/'+data.semester+'" title="Sections / Subject Offerings"><i class="fa fa-lg fa-list-alt"></i></a>';
-            return open;
-          }
-        }
-      ]
-    });
-
-    $('.callout', '#newSubjectForm').hide();
-    $('body').on('change', '#newSubjectForm input', function() {
-      $(this).closest('.form-group').removeClass('has-error');
-      $(this).closest('.form-group').find('.help-block').html('');
-    });
-    $('body').on('change', '.enrollment-schedule-is-open', function() {
-      var enrollmentSchedule = $(this).attr('name');
-      var isOpen = $(this).val();
-      $.ajax({
-        type: 'PATCH',
-        url: '{{ url("api/enrollment-schedules") }}/' + enrollmentSchedule,
-        success: function(r) {
-          console.log(r);
-        }
-      });
-    });
-
-    $('#newSubjectForm').submit(function(e) {
-      e.preventDefault();
-      var ref = this;
-      var data = $(ref).serialize();
-
-      $.post('{{ url("api/enrollment-schedules") }}', data, function(r) {
-        $('.callout', ref).addClass('callout-success').show().fadeOut(3000).text('Successfully registered new curriculum.');
-        ref.reset();
-        subjectsMasterList.draw();
-      }).fail(function(r) {
-        if(r.responseJSON !== undefined) {
-          var responseJSON = r.responseJSON;
-          if(responseJSON.status_code === 422) {
-            var errors = responseJSON.errors;
-            if(errors !== undefined) {
-              $.each(errors, function(key, value) {
-                var errorMessage = value[0];
-                $('#'+key, ref).closest('.form-group').addClass('has-error');
-                $('#'+key, ref).closest('.form-group').find('.help-block').html(errorMessage);
-              });
-            }
-          }
-        }
-      });
-    });
-  });
 </script>
 @endsection

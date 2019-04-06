@@ -99,7 +99,7 @@
       'ordering': false,
       'processing': true,
       'serverSide': true,
-      'ajax': '{{ url("api/curricula") }}',
+      'ajax': '{{ url("api/curricula") }}?token='+token,
       'columns': [
         { 'data': 'id' },
         { 'data': 'course_code' },
@@ -136,7 +136,7 @@
       var ref = this;
       var data = $(ref).serialize();
 
-      $.post('{{ url("api/curricula") }}', data, function(r) {
+      $.post('{{ url("api/curricula") }}?token='+token, data, function(r) {
         $('.callout', ref).addClass('callout-success').show().fadeOut(3000).text('Successfully registered new curriculum.');
         ref.reset();
         subjectsMasterList.draw();

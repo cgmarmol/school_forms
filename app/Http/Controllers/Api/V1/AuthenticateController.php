@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use JWTAuth;
 use \Tymon\JWTAuth\Exceptions\JWTException;
 use App\User;
+use App\Transformers\UserTransformer;
 
 /**
  * API Authentication Layer.
@@ -29,7 +30,8 @@ class AuthenticateController extends Controller
    *    @Response(200, body={"token": "jwt_generated_token" })
    * })
    */
-  public function login(Request $request) {
+  public function login(Request $request)
+  {
 
     $user = User::where('email', '=', $request->input('email'))
       ->where('password', '=', md5($request->input('password')))
@@ -52,7 +54,8 @@ class AuthenticateController extends Controller
     return response()->json(compact('token'));
   }
 
-  public function token(){
+  public function token()
+  {
     $token = JWTAuth::getToken();
     if(! $token) {
       return response()->json(['error' => 'token_not_provided'], 500);
@@ -76,5 +79,16 @@ class AuthenticateController extends Controller
     }
 
     return response()->json(['success' => JWTAuth::invalidate(JWTAuth::getToken())]);
+  }
+
+  public function user()
+  {
+    $user = app('Dingo\Api\Auth\Auth')->user();
+
+    return $this->response->item(
+      $user,
+      new UserTransformer,
+      ['key' => 'user']
+    );
   }
 }

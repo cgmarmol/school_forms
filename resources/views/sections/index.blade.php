@@ -57,7 +57,7 @@
     $('#enrollment_schedule').select2({
       placeholder: 'Select enrollment schedule',
       ajax: {
-        url: '{{ url("api/active-enrollment-schedules") }}',
+        url: '{{ url("api/active-enrollment-schedules") }}?token='+token,
         dataType: 'json',
         processResults: function (data) {
           return {
@@ -89,7 +89,7 @@
         'serverSide': true,
         'searching': false,
         'ajax': {
-          'url': '{{ url("api/sections") }}?filters[academic_year]='+academicYear+'&filters[semester]='+semester+'&include=subject',
+          'url': '{{ url("api/sections") }}?token='+token+'&filters[academic_year]='+academicYear+'&filters[semester]='+semester+'&include=subject',
           'data': function(d) {
             return $.extend({}, d, {
               'page': d.start / d.length + 1

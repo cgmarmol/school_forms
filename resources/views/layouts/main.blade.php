@@ -369,8 +369,9 @@
           }
           if(token) {
             $.get('{{ url("api/authentication/user") }}?token='+token, function(r) {
-              var name = r.name;
-              var createdAt = r.created_at;
+              var user = r.user;
+              var name = user.first_name + ' ' + user.last_name;
+              var createdAt = user.created_at;
               $('.user-name').text(name);
               $('.user-created-at').text(createdAt);
             }).fail(function() {

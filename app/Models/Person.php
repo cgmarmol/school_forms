@@ -16,6 +16,11 @@ class Person extends Model
       'gender'
     ];
 
+    public function user()
+    {
+      return $this->hasOne('App\User', 'person_id', 'id');
+    }
+
     public function student()
     {
       return $this->hasOne('App\Models\Student', 'person_id', 'id');
