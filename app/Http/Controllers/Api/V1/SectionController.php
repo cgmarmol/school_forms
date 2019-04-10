@@ -40,16 +40,10 @@ class SectionController extends Controller
 
           $sections = $sections->paginate($request->input('length'));
 
+          return $this->response->paginator($sections, new SectionTransformer);
         }
 
-        return $this->response->paginator($sections, new SectionTransformer);
-
-        return [
-          'draw' => $request->input('draw'),
-          'recordsTotal' => $sectionsCount,
-          'recordsFiltered' => $sectionsCount,
-          'data' =>   $sections
-        ];
+        return null;
     }
 
     /**

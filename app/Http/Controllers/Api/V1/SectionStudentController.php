@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Section;
 use App\Models\Student;
+use App\Transformers\StudentTransformer;
 
 class SectionStudentController extends Controller
 {
@@ -16,13 +17,21 @@ class SectionStudentController extends Controller
      */
     public function index(Request $request, Section $section)
     {
-        return [
-          'draw' => $request->input('draw'),
-          'recordsTotal' => $section->students->count(),
-          'recordsFiltered' => $section->students->count(),
-          'data' => $section->students
-        ];
-        return $section;
+      $students = $section->students;
+      $studentIDs = $students->pluck('id');
+
+      if($studentIDs) {
+        $students = Student::select('students.*')
+          ->join('people', 'students.person_id', '=', 'people.id')
+          ->orderBy('people.gender', 'asc')
+          ->orderBy('people.last_name', 'asc')
+          ->whereIn('students.id', $studentIDs)
+          ->paginate($request->input('length'));
+
+        return $this->response->paginator($students, new StudentTransformer);
+      }
+
+      return null;
     }
 
     /**

@@ -35,6 +35,18 @@ Route::get('/sections', function() {
     return view('sections/index', []);
 });
 
+// My Classes
+Route::prefix('my-classes')->group(function() {
+  Route::get('/', function() {
+    return view('my-classes/index', []);
+  });
+
+  Route::get('{section_id}/attendance', function() {
+    return view('my-classes/attendance/index', []);
+  });
+
+});
+
 // Settings
 Route::prefix('settings')->group(function() {
   Route::get('curricula', function() {

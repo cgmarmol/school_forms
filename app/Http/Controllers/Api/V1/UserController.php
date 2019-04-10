@@ -16,15 +16,16 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-      $users = User::all();
+      $filters = $request->input('filters');
 
-      return $this->response->collection(
-        $users,
-        new UserTransformer,
-        ['key' => 'users']
-      );
+      $users = User::select('users.*')
+        ->join('people', 'users.person_id', '=', 'people.id')
+        ->orderBy('people.last_name', 'asc');
+      $users = $users->paginate($request->input('length'));
+
+      return $this->response->paginator($users, new UserTransformer);
     }
 
     /**

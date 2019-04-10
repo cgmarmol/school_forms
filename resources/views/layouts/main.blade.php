@@ -100,7 +100,7 @@
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu" data-widget="tree">
-              <li class="treeview {{ Request::is('/') ? 'active' : null }}">
+              <li class="treeview {{ Request::is('/') || Request::is('enroll') || Request::is('sections') ? 'active' : null }}">
                 <a href="#">
                   <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                   <span class="pull-right-container">
@@ -108,9 +108,14 @@
                   </span>
                 </a>
                 <ul class="treeview-menu">
-                  <li><a href="{{ url('/enroll') }}"><i class="fa fa-user-plus"></i> Enroll Student</a></li>
-                  <li><a href="{{ url('/sections') }}"><i class="fa fa-list-alt"></i> Sections Masterlist</a></li>
+                  <li class="{{ Request::is('enroll') ? 'active' : null }}"><a href="{{ url('/enroll') }}"><i class="fa fa-user-plus"></i> Enroll Student</a></li>
+                  <li class="{{ Request::is('sections') ? 'active' : null }}"><a href="{{ url('/sections') }}"><i class="fa fa-list-alt"></i> Sections Masterlist</a></li>
                 </ul>
+              </li>
+              <li class="{{ Request::is('my-classes*') ? 'active' : null }}">
+                <a href="{{ url('my-classes') }}">
+                  <i class="fa fa-th"></i> <span>My Classes</span>
+                </a>
               </li>
               <li class="treeview {{ Request::is('settings/*') ? 'active' : null }}">
                 <a href="#">
@@ -120,17 +125,17 @@
                   </span>
                 </a>
                 <ul class="treeview-menu">
-                  <li>
+                  <li class="{{ Request::is('settings/curricula*') ? 'active' : null }}">
                     <a href="{{ url('settings/curricula') }}">
                       <i class="fa fa-list"></i> <span>Curricula</span>
                     </a>
                   </li>
-                  <li>
+                  <li class="{{ Request::is('settings/enrollment-schedules*') ? 'active' : null }}">
                     <a href="{{ url('settings/enrollment-schedules') }}">
                       <i class="fa fa-calendar"></i> <span>Enrollment Schedules</span>
                     </a>
                   </li>
-                  <li>
+                  <li class="{{ Request::is('settings/user-accounts*') ? 'active' : null }}">
                     <a href="{{ url('settings/user-accounts') }}">
                       <i class="fa fa-users"></i> <span>User Accounts</span>
                     </a>
@@ -377,6 +382,8 @@
             }).fail(function() {
               location.href = '{{ url("login")}}';
             });
+          } else {
+            location.href = '{{ url("login")}}';
           }
           $('.logout').on('click', function() {
             $.get('{{ url("api/authentication/logout") }}?token='+token, function(r) {

@@ -12,6 +12,7 @@ class UserTransformer extends TransformerAbstract
           'first_name' => $user->person->first_name,
           'middle_name' => $user->person->middle_name,
           'last_name' => $user->person->last_name,
+          'gender' => $user->person->gender,
           'email' => $user->email,
           'created_at' => $user->created_at->format('M d, Y'),
         ];
