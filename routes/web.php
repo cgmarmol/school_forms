@@ -41,8 +41,10 @@ Route::prefix('my-classes')->group(function() {
     return view('my-classes/index', []);
   });
 
-  Route::get('{section_id}/attendance', function() {
-    return view('my-classes/attendance/index', []);
+  Route::get('{section_id}/attendance', function($section_id) {
+    return view('my-classes/attendance/index', [
+       'section_id' => $section_id
+    ]);
   });
 
 });

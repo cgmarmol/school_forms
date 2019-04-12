@@ -17,51 +17,30 @@
 <div class="row">
   <div class="col-md-12">
     <div class="box box-primary">
-      <div class="box-header with-border">
-        <h3 class="box-title"><i class="fa fa-filter"></i> Filters</h4>
-      </div>
-      <div class="box-body">
-        <div class="form-group">
-          <label for="academic_year">Academic Year</label>
-          <input class="form-control" id="academic_year" name="academic_year">
-          <span class="help-block"></span>
-        </div>
-        <div class="form-group">
-          <label for="semester">Semester</label>
-          <input class="form-control" id="semester" name="semester">
-          <span class="help-block"></span>
-        </div>
-      </div>
-      <div class="box-footer">
-        <button type="button" class="btn btn-primary pull-right" id="search" name="search">Search</button>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-12">
-    <div class="box box-primary">
-      <div class="box-body">
-        <div id="sections-placeholder">
-        </div>
-        <table class="table table-bordered table-striped" id="sections-template" style="display: none;">
+      <!-- form start -->
+      <form role="form">
+        <div class="box-body">
+          <table id="example1" class="table table-bordered table-striped" width="100%">
             <thead>
-              <th>Section ID</th>
-              <th>Section Name</th>
-              <th>Subject Name</th>
-              <th>Grade Level</th>
-              <th>No. of Students</th>
-              <th>&nbsp;</th>
+              <th>LRN</th>
+              <th>Last Name</th>
+              <th>First Name</th>
+              <th>M.I.</th>
             </thead>
             <tfoot>
-              <th>Section ID</th>
-              <th>Section Name</th>
-              <th>Subject Name</th>
-              <th>Grade Level</th>
-              <th>No. of Students</th>
-              <th>&nbsp;</th>
+              <th>LRN</th>
+              <th>Last Name</th>
+              <th>First Name</th>
+              <th>M.I.</th>
             </tfoot>
-        </table>
-      </div>
-      <!-- /.box-body -->
+          </table>
+        </div>
+        <!-- /.box-body -->
+
+        <div class="box-footer">
+
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -70,52 +49,34 @@
 @section('custom-scripts')
 <script type="text/javascript">
   $(function() {
-    $('body').on('click', '#search', function(e) {
-      var academicYear = $('#academic_year').val();
-      var semester = $('#semester').val();
-
-      var template = $('#sections-template').clone();
-      template.attr('id', 'availableSectionsTable');
-      template.show();
-      $('#sections-placeholder').html(template);
-
-      var availableSectionsTable = $('#availableSectionsTable').DataTable({
-        'ordering': false,
-        'processing': true,
-        'responsive': true,
-        'serverSide': true,
-        'searching': false,
-        'ajax': {
-          'url': '{{ url("api/sections") }}?token='+token+'&filters[academic_year]='+academicYear+'&filters[semester]='+semester+'&include=subject',
-          'data': function(d) {
-            return $.extend({}, d, {
-              'page': d.start / d.length + 1
-            });
-          },
-          'dataSrc': function(json) {
-            json.start = (json.meta.pagination.current_page-1) * json.meta.pagination.per_page;
-            json.length = json.meta.pagination.per_page;
-            json.recordsTotal = json.recordsFiltered = json.meta.pagination.total;
-            return json.data;
-          }
+    var subjectsMasterList = $('#example1').DataTable({
+      'ordering': false,
+      'processing': true,
+      'responsive': true,
+      'serverSide': true,
+      'searching': false,
+      'ajax': {
+        'url': '{{ url("api/sections/".$section_id) }}/students?token='+token,
+        'data': function(d) {
+          return $.extend({}, d, {
+            'page': d.start / d.length + 1
+          });
         },
-        'columns': [
-          { 'data': 'id' },
-          { 'data': 'name' },
-          { 'data': 'subject.data.title' },
-          { 'data': 'subject.data.level' },
-          { 'data': 'number_students' },
-          {
-            'data': null,
-            'render': function(data, type, row) {
-              var open = '<a href="{{ url("my-classes") }}/'+data.id+'/attendance" title="Attendance"><i class="fa fa-lg fa-calendar-check-o"></i></a>';
-              return open;
-            }
-          }
-        ]
-      });
-      availableSectionsTable.draw();
+        'dataSrc': function(json) {
+          json.start = (json.meta.pagination.current_page-1) * json.meta.pagination.per_page;
+          json.length = json.meta.pagination.per_page;
+          json.recordsTotal = json.recordsFiltered = json.meta.pagination.total;
+          return json.data;
+        }
+      },
+      'columns': [
+        { 'data': 'LRN' },
+        { 'data': 'last_name' },
+        { 'data': 'first_name' },
+        { 'data': 'middle_name' }
+      ]
     });
+    
   });
 </script>
 @endsection
