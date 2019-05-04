@@ -20,9 +20,15 @@ class CreateSectionsTable extends Migration
             $table->tinyInteger('semester');
             $table->string('name');
             $table->integer('subject_id')->unsigned()->nullable();
+            $table->integer('teacher_id')->unsigned()->nullable();
 
             $table->foreign('subject_id')
               ->references('id')->on('subjects')
+              ->onDelete('cascade')
+              ->onUpdate('cascade');
+
+            $table->foreign('teacher_id')
+              ->references('id')->on('teachers')
               ->onDelete('cascade')
               ->onUpdate('cascade');
 

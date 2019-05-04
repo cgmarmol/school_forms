@@ -16,8 +16,5 @@ use Faker\Generator as Faker;
 $factory->define(App\Models\Student::class, function (Faker $faker) {
     return [
         'LRN' => $faker->randomNumber(7),
-
-
-
     ];
 });

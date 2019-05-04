@@ -24,7 +24,8 @@ class SectionController extends Controller
         if($filters && isset($filters['academic_year']) && isset($filters['semester'])) {
           $sections = Section::where([
             'academic_year' => $filters['academic_year'],
-            'semester' => $filters['semester']
+            'semester' => $filters['semester'],
+            'teacher_id' => $this->user()->person->teacher->id
           ])
           ->orderBy('academic_year', 'desc');
 

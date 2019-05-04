@@ -13,11 +13,6 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(App\Models\Section::class, function (Faker $faker) {
-    return [
-        'academic_year' => '2019-2020',
-        'semester' => rand(1, 2),
-        'name' => $faker->word,
-        'teacher_id' => App\Models\Teacher::inRandomOrder()->first()->id
-    ];
+$factory->define(App\Models\Teacher::class, function (Faker $faker) {
+    return [];
 });
