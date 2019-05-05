@@ -10,6 +10,8 @@ class EnrollmentSchedule extends Model
 
     protected $fillable = [
       'academic_year',
-      'semester'
+      'semester',
+      'start_date',
+      'end_date'
     ];
 }

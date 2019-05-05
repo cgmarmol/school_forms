@@ -35,7 +35,20 @@ class EnrollmentScheduleController extends Controller
      */
     public function store(Request $request)
     {
-        return EnrollmentSchedule::create($request->input());
+        $academicYear = $request->input('academic_year');
+        $semester = $request->input('semester');
+        $duration = $request->input('duration');
+        $duration = explode('-', $duration);
+
+        $startDate = \Carbon\Carbon::createFromFormat('m/d/Y', trim($duration[0]));
+        $endDate = \Carbon\Carbon::createFromFormat('m/d/Y', trim($duration[1]));
+
+        return EnrollmentSchedule::create([
+          'academic_year' => $academicYear,
+          'semester' => $semester,
+          'start_date' => $startDate->format('Y-m-d'),
+          'end_date' => $endDate->format('Y-m-d')
+        ]);
     }
 
     /**

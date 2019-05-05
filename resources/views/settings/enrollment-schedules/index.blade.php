@@ -55,12 +55,17 @@
           <div class="callout"></div>
           <div class="form-group">
             <label for="description">Academic Year</label>
-            <input type="text" class="form-control" id="academic_year" name="academic_year" placeholder="Enter curriculum description">
+            <input type="text" class="form-control" id="academic_year" name="academic_year" placeholder="Enter academic year">
             <span class="help-block"></span>
           </div>
           <div class="form-group">
             <label for="description">Semester</label>
-            <input type="text" class="form-control" id="semester" name="semester" placeholder="Enter curriculum description">
+            <input type="text" class="form-control" id="semester" name="semester" placeholder="Enter semester">
+            <span class="help-block"></span>
+          </div>
+          <div class="form-group">
+            <label for="description">Duration</label>
+            <input type="text" class="form-control" id="duration" name="duration" placeholder="Enter duration">
             <span class="help-block"></span>
           </div>
         </div>
@@ -117,6 +122,8 @@
         }
       ]
     });
+
+    $('#duration').daterangepicker();
 
     $('.callout', '#newSubjectForm').hide();
     $('body').on('change', '#newSubjectForm input', function() {

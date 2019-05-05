@@ -19,6 +19,7 @@ mix.styles([
   'vendor/almasaeed2010/adminlte/bower_components/font-awesome/css/font-awesome.min.css',
   'vendor/almasaeed2010/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css',
   'vendor/almasaeed2010/adminlte/bower_components/select2/dist/css/select2.min.css',
+  'vendor/almasaeed2010/adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.css',
   'vendor/almasaeed2010/adminlte/dist/css/AdminLTE.min.css',
   'vendor/almasaeed2010/adminlte/dist/css/skins/_all-skins.min.css',
 ], 'public/css/app.css');
@@ -29,6 +30,8 @@ mix.scripts([
   'vendor/almasaeed2010/adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js',
   'vendor/almasaeed2010/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js',
   'vendor/almasaeed2010/adminlte/bower_components/select2/dist/js/select2.min.js',
+  'vendor/almasaeed2010/adminlte/bower_components/moment/min/moment.min.js',
+  'vendor/almasaeed2010/adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js',
   'vendor/almasaeed2010/adminlte/dist/js/adminlte.min.js',
 ], 'public/js/app.js');
 

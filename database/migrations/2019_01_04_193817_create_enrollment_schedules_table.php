@@ -17,6 +17,8 @@ class CreateEnrollmentSchedulesTable extends Migration
             $table->increments('id');
             $table->string('academic_year');
             $table->tinyInteger('semester');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->boolean('is_open')->default(false);
 
             $table->timestamps();

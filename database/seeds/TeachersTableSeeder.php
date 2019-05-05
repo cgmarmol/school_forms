@@ -11,9 +11,14 @@ class TeachersTableSeeder extends Seeder
      */
     public function run()
     {
-	      App\Models\Teacher::where('id', '>', 0)->delete();
-	      App\Models\Person::where('id', '>', 0)->delete();
-	      factory(App\Models\Person::class, 10)->create()->each(function($u) {
+	      $teachers = App\Models\Teacher::where('id', '>', 0);
+        foreach($teachers as $teacher) {
+          $person = $teacher->person;
+          $teacher->delete();
+          $person->delete();
+        }
+
+        factory(App\Models\Person::class, 10)->create()->each(function($u) {
           $u->student()->save(factory(App\Models\Teacher::class)->make());
           $u->user()->save(factory(App\User::class)->make());
        });
