@@ -8,11 +8,13 @@ use League\Fractal\TransformerAbstract;
 class StudentTransformer extends TransformerAbstract
 {
     public $availableIncludes = [
-      'sections'
+      'sections',
+      'attendances'
     ];
 
     public $academicYear = null;
     public $semester = null;
+    public $sectionId = null;
 
     public function transform(Student $student) {
 
@@ -44,4 +46,18 @@ class StudentTransformer extends TransformerAbstract
 
       return null;
     }
+    
+    public function includeAttendances(Student $student)
+    {
+       $attendances = $student->attendances
+         ->where('section_id', $this->sectionId);
+       
+       if($attendances) {
+         return $this->collection($attendances, new AttendanceTransformer());
+       }
+
+       return null;
+    }
+    
+     
 }

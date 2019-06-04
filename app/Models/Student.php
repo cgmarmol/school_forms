@@ -20,4 +20,11 @@ class Student extends Model
     public function sections() {
       return $this->belongsToMany('App\Models\Section');
     }
+    
+    public function attendances() {
+      return $this->hasMany('App\Models\Attendance');
+    }
+    
+    
+    
 }

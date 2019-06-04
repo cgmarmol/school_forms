@@ -8,6 +8,9 @@ use App\Models\Section;
 use App\Models\Student;
 use App\Transformers\StudentTransformer;
 
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
+
 class SectionStudentController extends Controller
 {
     /**
@@ -27,8 +30,11 @@ class SectionStudentController extends Controller
           ->orderBy('people.last_name', 'asc')
           ->whereIn('students.id', $studentIDs)
           ->paginate($request->input('length'));
+          
+        $transformer = new StudentTransformer;
+        $transformer->sectionId = $section->id;
 
-        return $this->response->paginator($students, new StudentTransformer);
+        return $this->response->paginator($students, $transformer);
       }
 
       return null;
@@ -54,6 +60,23 @@ class SectionStudentController extends Controller
     {
         $student = Student::findOrFail($request->input('student_id'));
         $section->students()->attach($student);
+        
+        $start = Carbon::createFromFormat('Y-m-d', '2019-06-01');
+        $end = Carbon::createFromFormat('Y-m-d', '2020-04-01');
+        $period = CarbonPeriod::create($start->format('Y-m-d'), $end->endOfMonth()->format('Y-m-d'));
+       
+        foreach($period as $date) {
+              $q = $student->attendances
+                ->where('section_id', $section->id)
+                ->where('entry_date', $date->format('Y-m-d'));
+              $isExist = $q->count() > 0;
+              if (!$isExist) {
+                 $student->attendances()->create([
+                   'section_id' => $section->id,
+                   'entry_date' => $date->format('Y-m-d')
+                 ]);
+              }
+        }
 
         return $student;
     }
