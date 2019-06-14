@@ -82,7 +82,7 @@
         'serverSide': true,
         'searching': false,
         'ajax': {
-          'url': '{{ url("api/sections") }}?token='+token+'&filters[academic_year]='+academicYear+'&filters[semester]='+semester+'&include=subject',
+          'url': '{{ url("api/sections") }}?token='+token+'&filters[academic_year]='+academicYear+'&filters[semester]='+semester+'&myClasses=1&include=subject',
           'data': function(d) {
             return $.extend({}, d, {
               'page': d.start / d.length + 1

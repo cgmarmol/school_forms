@@ -48,6 +48,7 @@ $api->version('v1', ['middleware' => ['api.auth', 'bindings']], function($api) {
 
   $api->resource('sections', 'App\Http\Controllers\Api\V1\SectionController');
   $api->resource('sections.students', 'App\Http\Controllers\Api\V1\SectionStudentController');
+  $api->post('sections/{section}/students/{student}/attendances', 'App\Http\Controllers\Api\V1\SectionStudentController@storeAttendance');
 
   $api->resource('users', 'App\Http\Controllers\Api\V1\UserController');
 });

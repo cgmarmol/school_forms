@@ -1,9 +1,15 @@
 <?php
 namespace App\Transformers;
 
+use App\Models\EnrollmentSchedule;
 use App\Models\Student;
 use App\Models\Person;
+use App\Models\Section;
+use App\Models\Attendance;
 use League\Fractal\TransformerAbstract;
+
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class StudentTransformer extends TransformerAbstract
 {
@@ -20,7 +26,7 @@ class StudentTransformer extends TransformerAbstract
 
         $person = $student->person;
 
-        return [
+        $fields = [
           'id' => (int) $student->id,
           'LRN' => (string) $student->LRN,
           'first_name' => $person->first_name,
@@ -28,6 +34,14 @@ class StudentTransformer extends TransformerAbstract
           'last_name' => $person->last_name,
           'gender' => $person->gender
         ];
+
+        if($this->sectionId) {
+          $attendances = $student->attendances->where('section_id', $this->sectionId);
+          $fields['lates'] = $attendances->where('entry_code', 'L')->count();
+          $fields['absences'] = $attendances->where('entry_code', 'A')->count();
+        }
+
+        return $fields;
     }
 
     public function includeSections(Student $student) {
@@ -46,18 +60,43 @@ class StudentTransformer extends TransformerAbstract
 
       return null;
     }
-    
+
     public function includeAttendances(Student $student)
     {
-       $attendances = $student->attendances
-         ->where('section_id', $this->sectionId);
-       
+       $section = Section::findOrFail($this->sectionId);
+       $attendances = $student->attendances->where('section_id', $section->id);
+
+       $enrollmentSchedule = EnrollmentSchedule::where('academic_year', $section->academic_year)
+         ->where('semester', $section->semester)
+         ->first();
+
+       $start = Carbon::createFromFormat('Y-m-d', $enrollmentSchedule->start_date);
+       $end = Carbon::createFromFormat('Y-m-d', $enrollmentSchedule->end_date);
+       $period = CarbonPeriod::create($start->format('Y-m-d'), $end->endOfMonth()->format('Y-m-d'));
+
+       $ledger = collect();
+       foreach($period as $date) {
+          $attendance = $attendances->where('entry_date', $date->format('Y-m-d'))->first();
+          if($attendance) {
+            $ledger->push($attendance);
+          } else {
+
+            if($date->isWeekend()) continue;
+
+            $ledger->push(Attendance::make([
+              'section_id' => $section->id,
+              'entry_date' => $date->format('Y-m-d'),
+              'entry_code' => ''
+            ]));
+          }
+       }
+
        if($attendances) {
-         return $this->collection($attendances, new AttendanceTransformer());
+         return $this->collection($ledger, new AttendanceTransformer());
        }
 
        return null;
     }
-    
-     
+
+
 }

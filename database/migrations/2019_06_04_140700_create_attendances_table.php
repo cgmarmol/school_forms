@@ -18,6 +18,7 @@ class CreateAttendancesTable extends Migration
             $table->unsignedInteger('section_id');
             $table->unsignedInteger('student_id');
             $table->date('entry_date');
+            $table->char('entry_code', 1)->comment('[P]resent / [L]ate / [A]bsent');
             $table->foreign('section_id')
               ->references('id')->on('sections')
               ->onDelete('cascade')

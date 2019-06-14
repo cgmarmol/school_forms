@@ -12,8 +12,9 @@ class AttendanceTransformer extends TransformerAbstract
     public function transform(Attendance $attendance) {
         return [
           'id' => (int) $attendance->id,
-          'date' => $attendance->entry_date
+          'date' => $attendance->entry_date,
+          'code' => $attendance->entry_code
         ];
     }
-     
+
 }

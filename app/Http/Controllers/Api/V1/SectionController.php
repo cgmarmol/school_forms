@@ -20,14 +20,20 @@ class SectionController extends Controller
     {
         $sections = null;
         $filters = $request->input('filters');
+        $myClasses = $request->input('myClasses');
 
         if($filters && isset($filters['academic_year']) && isset($filters['semester'])) {
           $sections = Section::where([
             'academic_year' => $filters['academic_year'],
             'semester' => $filters['semester'],
-            'teacher_id' => $this->user()->person->teacher->id
           ])
           ->orderBy('academic_year', 'desc');
+
+          if($myClasses) {
+            $sections->where([
+              'teacher_id' => $this->user()->person->teacher->id
+            ]);
+          }
 
           if(isset($filters['student_id'])) {
             $studentId = $filters['student_id'];
